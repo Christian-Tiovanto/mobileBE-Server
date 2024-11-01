@@ -6,6 +6,7 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto) {
     const user = await User.create(createUserDto);
+    await user.save();
     return user;
   }
 }

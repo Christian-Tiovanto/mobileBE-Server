@@ -5,6 +5,7 @@ import {
   JoiSchemaOptions,
 } from "joi-class-decorators";
 import { IUser } from "../models/UserModel";
+import { UserRole } from "../enums/user-role";
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateUserDto implements IUser {
   @JoiSchema(Joi.string().required())
@@ -14,5 +15,11 @@ export class CreateUserDto implements IUser {
   @JoiSchema(Joi.string().required())
   phone_number: string;
   @JoiSchema(Joi.string().required())
-  timer: string;
+  user_id: string;
+  @JoiSchema(
+    Joi.string()
+      .valid(...Object.values(UserRole))
+      .required()
+  )
+  role: UserRole;
 }

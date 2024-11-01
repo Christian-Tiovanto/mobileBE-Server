@@ -3,7 +3,7 @@ version: '3.7'
 services:
   mongo:
     image: bitnami/mongodb:6.0
-    container_name: startup_mongo
+    container_name: mobilebe_mongo
     environment:
       MONGODB_ROOT_USER: ${DB_ROOT_USER}
       MONGODB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}

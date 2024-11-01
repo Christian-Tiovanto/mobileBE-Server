@@ -1,13 +1,27 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { HydratedDocument, Model, model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
+import { UserRole } from "../enums/user-role";
 
 export interface IUser {
   name: string;
+  user_id: string;
   password: string;
   phone_number: string;
+  role: UserRole;
 }
-const userSchema = new Schema<IUser>({
+
+interface IUserMethods {
+  correctPassword(candidatePassword: string, userPassword: string): boolean;
+}
+export type UserModel = Model<IUser, {}, IUserMethods>;
+export type UserDocument = HydratedDocument<IUser>;
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   name: String,
+  user_id: {
+    type: String,
+    required: [true, "please provide a user id"],
+    unique: true,
+  },
   password: {
     type: String,
     select: false,
@@ -18,24 +32,28 @@ const userSchema = new Schema<IUser>({
     required: [true, "Please provide a phone number"],
     select: false,
   },
+  role: {
+    type: String,
+    enum: UserRole,
+    required: [true, "User need a role"],
+  },
 });
 
 userSchema.pre("save", async function (next) {
-  // Only run this function if password was actually modified
   if (!this.isModified("password")) return next();
-
-  // Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
 
   next();
 });
 
-userSchema.methods.correctPassword = async function (
-  candidatePassword: string,
-  userPassword: string
-) {
-  return await bcrypt.compare(candidatePassword, userPassword);
-};
-
-const User = model<IUser>("User", userSchema);
+userSchema.method(
+  "correctPassword",
+  async function correctPassword(
+    candidatePassword: string,
+    userPassword: string
+  ) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+  }
+);
+const User = model<IUser, UserModel>("User", userSchema);
 export default User;
