@@ -15,29 +15,32 @@ interface IUserMethods {
 }
 export type UserModel = Model<IUser, {}, IUserMethods>;
 export type UserDocument = HydratedDocument<IUser>;
-const userSchema = new Schema<IUser, UserModel, IUserMethods>({
-  name: String,
-  user_id: {
-    type: String,
-    required: [true, "please provide a user id"],
-    unique: true,
+const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+  {
+    name: String,
+    user_id: {
+      type: String,
+      required: [true, "please provide a user id"],
+      unique: true,
+    },
+    password: {
+      type: String,
+      select: false,
+      required: [true, "please provide a password"],
+    },
+    phone_number: {
+      type: String,
+      required: [true, "Please provide a phone number"],
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: UserRole,
+      required: [true, "User need a role"],
+    },
   },
-  password: {
-    type: String,
-    select: false,
-    required: [true, "please provide a password"],
-  },
-  phone_number: {
-    type: String,
-    required: [true, "Please provide a phone number"],
-    select: false,
-  },
-  role: {
-    type: String,
-    enum: UserRole,
-    required: [true, "User need a role"],
-  },
-});
+  { versionKey: false }
+);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
