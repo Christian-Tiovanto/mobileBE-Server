@@ -30,7 +30,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { user_id, password } = loginDto;
-    const user = await this.findUserByUserId(user_id);
+    const user = await userService.findUserByUserId(user_id);
     await user.correctPassword(password, user.password);
     const token = await this.signToken(user.user_id);
     return { user, token };
@@ -43,11 +43,5 @@ export class AuthService {
     const newUser = await userService.createUser(createUserDto);
     const token = await this.signToken(newUser.user_id);
     return { newUser, token };
-  }
-
-  private async findUserByUserId(userId: string) {
-    const user = await User.findOne({ user_id: userId }).select("+password");
-    if (!user) throw new AppError("no user with that id", 404);
-    return user;
   }
 }

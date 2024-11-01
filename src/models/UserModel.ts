@@ -32,6 +32,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       type: String,
       required: [true, "Please provide a phone number"],
       select: false,
+      unique: true,
     },
     role: {
       type: String,
