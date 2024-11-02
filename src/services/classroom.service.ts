@@ -11,7 +11,7 @@ export class ClassroomService {
   }
 
   async findClassroomById(classroomId: string) {
-    const classroom = await Classroom.findById(classroomId);
+    const classroom = await Classroom.findOne({ _id: classroomId });
     if (!classroom)
       throw new AppError(`no classroom with id ${classroomId}`, 400);
     return classroom;

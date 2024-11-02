@@ -5,20 +5,19 @@ import { Types } from "mongoose";
 import { AttendanceStatus } from "../enums/attendance-status";
 
 export interface IClassroom {
-  nama_kelas: string;
+  _id: string;
 }
 
 export type ClassroomModel = Model<IClassroom, {}>;
 export type ClassroomDocument = HydratedDocument<IClassroom>;
 const classroomSchema = new Schema<IClassroom, ClassroomModel>(
   {
-    nama_kelas: {
+    _id: {
       type: String,
       required: true,
-      unique: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false, _id: false }
 );
 
 const Classroom = model<IClassroom, ClassroomModel>(

@@ -24,6 +24,6 @@ export class CreateUserDto implements IUser {
       .required()
   )
   role: UserRole;
-  @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).optional())
-  class_id: Types.ObjectId;
+  @JoiSchema(Joi.string().optional())
+  class_id: string;
 }

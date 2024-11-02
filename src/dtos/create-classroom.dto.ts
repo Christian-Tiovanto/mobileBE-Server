@@ -5,5 +5,5 @@ import Joi from "joi";
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateClassroomDto implements IClassroom {
   @JoiSchema(Joi.string().required())
-  nama_kelas: string;
+  _id: string;
 }

@@ -13,14 +13,14 @@ export class GradeService {
 
   async createEmptyGradeBulk(createGradeDto: CreateGradeDto) {
     const { class_id, subject, tahun_ajaran } = createGradeDto;
-    await classService.findClassroomById(class_id.toString());
+    await classService.findClassroomById(class_id);
     const grade = await this.getGradeByClassIdNSubNTahun(
-      class_id.toString(),
+      class_id,
       tahun_ajaran.toString(),
       subject
     );
     if (grade) throw new AppError("grade already created", 400);
-    const users = await userService.getUsersByClassId(class_id.toString());
+    const users = await userService.getUsersByClassId(class_id);
     const grades: GradeDocument[] = users.map((user) => {
       return new Grade({ user_id: user._id, class_id, subject, tahun_ajaran });
     });

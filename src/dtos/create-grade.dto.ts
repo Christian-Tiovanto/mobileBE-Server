@@ -19,6 +19,6 @@ export class CreateGradeDto
   @JoiSchema(Joi.string().required())
   tahun_ajaran: string;
 
-  @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).required())
-  class_id: Types.ObjectId;
+  @JoiSchema(Joi.string().required())
+  class_id: string;
 }

@@ -10,7 +10,7 @@ import { GradeSubject } from "../enums/grade-list";
 export interface IGrade {
   subject: GradeSubject;
   user_id: Types.ObjectId;
-  class_id: Types.ObjectId;
+  class_id: string;
   assignment_score?: number;
   mid_term_score?: number;
   semester_score?: number;
@@ -31,7 +31,7 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
       required: [true, "please provide a user_id"],
     },
     class_id: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: [true, "please provide a class_id"],
     },
     assignment_score: { default: 0, type: Number },

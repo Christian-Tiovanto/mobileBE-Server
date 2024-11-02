@@ -8,7 +8,7 @@ export interface IAttendance {
   user_id: Types.ObjectId;
   status: AttendanceStatus;
   date: Date;
-  class_id: Types.ObjectId;
+  class_id: string;
   reason: string;
   tahun_ajaran: string;
 }
@@ -32,7 +32,7 @@ const attendanceSchema = new Schema<IAttendance, AttendanceModel>(
       required: [true, "please provide the date of attendance"],
     },
     class_id: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: [true, "please provide a class id"],
       ref: "classrooms",
     },

@@ -10,8 +10,8 @@ export class CreateAttendanceDto implements IAttendance {
   @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).required())
   user_id: Types.ObjectId;
 
-  @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).required())
-  class_id: Types.ObjectId;
+  @JoiSchema(Joi.string().required())
+  class_id: string;
 
   @JoiSchema(
     Joi.string()

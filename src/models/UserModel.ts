@@ -14,7 +14,7 @@ export interface IUser {
   password: string;
   phone_number: string;
   role: UserRole;
-  class_id: Types.ObjectId;
+  class_id: string;
 }
 
 interface IUserMethods {
@@ -47,7 +47,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       required: [true, "User need a role"],
     },
     class_id: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: "classrooms",
     },
   },

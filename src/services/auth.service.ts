@@ -4,7 +4,9 @@ import AppError from "../utils/appError";
 import * as jwt from "jsonwebtoken";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "../dtos/create-user.dto";
+import { ClassroomService } from "./classroom.service";
 const userService = new UserService();
+const classService = new ClassroomService();
 export class AuthService {
   constructor() {}
   private signToken(id) {
@@ -36,7 +38,8 @@ export class AuthService {
     return { user, token };
   }
   async signUp(createUserDto: CreateUserDto) {
-    const { user_id, password } = createUserDto;
+    const { user_id, class_id } = createUserDto;
+    await classService.findClassroomById(class_id);
     const user = await User.findOne({ user_id }).select("+password");
     if (user)
       throw new AppError("user_id already exist, use another user_id", 400);
