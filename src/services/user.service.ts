@@ -8,8 +8,6 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto) {
     const user = await User.create(createUserDto);
-    console.log("wywaa");
-    console.log(user);
     await user.save();
     return user;
   }
@@ -20,9 +18,7 @@ export class UserService {
   }
 
   async getUsersByClassId(classId: string) {
-    const users1 = await User.find();
-    const users = await User.find({ class_id: new Types.ObjectId(classId) });
-    console.log(users);
+    const users = await User.find({ class_id: classId });
     return users;
   }
 }
