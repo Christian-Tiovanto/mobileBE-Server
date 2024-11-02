@@ -18,7 +18,7 @@ export class AttendanceController {
     );
   }
 
-  getAttendancesForADate() {
+  getAttendancesStatusForADate() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
         const attendances = await attendanceService.getAttendancesForADate(
