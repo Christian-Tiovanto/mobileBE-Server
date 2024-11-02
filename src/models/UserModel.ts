@@ -1,4 +1,10 @@
-import mongoose, { HydratedDocument, Model, model, Schema } from "mongoose";
+import mongoose, {
+  HydratedDocument,
+  Model,
+  model,
+  Schema,
+  Types,
+} from "mongoose";
 import bcrypt from "bcrypt";
 import { UserRole } from "../enums/user-role";
 
@@ -8,6 +14,7 @@ export interface IUser {
   password: string;
   phone_number: string;
   role: UserRole;
+  class_id: Types.ObjectId;
 }
 
 interface IUserMethods {
@@ -38,6 +45,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       type: String,
       enum: UserRole,
       required: [true, "User need a role"],
+    },
+    class_id: {
+      type: Schema.Types.ObjectId,
+      ref: "classrooms",
     },
   },
   { versionKey: false }
