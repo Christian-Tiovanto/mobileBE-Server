@@ -6,7 +6,7 @@ const classroomRouter = express.Router();
 const classroomController = new ClassroomController();
 classroomRouter.post(
   "/",
-  JoiValidationMiddleware(CreateClassroomDto),
+  JoiValidationMiddleware({ classBodyType: CreateClassroomDto }),
   classroomController.createClassroom()
 );
 export default classroomRouter;

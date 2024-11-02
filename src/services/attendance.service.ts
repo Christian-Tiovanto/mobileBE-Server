@@ -47,4 +47,42 @@ export class AttendanceService {
       );
     return Attendance;
   }
+
+  async getAttendancesForADate(
+    classId: string,
+    tahunAjaran: string,
+    date: Date
+  ) {
+    date.setHours(17, 0, 0, 0);
+    const attendances = await Attendance.aggregate([
+      {
+        $match: {
+          class_id: classId,
+          tahun_ajaran: tahunAjaran,
+          date: {
+            $eq: date,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $addFields: {
+          status: "$_id",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+    return attendances;
+  }
 }

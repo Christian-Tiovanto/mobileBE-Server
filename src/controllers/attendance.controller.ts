@@ -17,4 +17,20 @@ export class AttendanceController {
       }
     );
   }
+
+  getAttendancesForADate() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const attendances = await attendanceService.getAttendancesForADate(
+          req.params.class_id,
+          req.params.tahun_ajaran,
+          new Date(`${req.query.date}`)
+        );
+        return res.status(200).json({
+          status: "success",
+          data: attendances,
+        });
+      }
+    );
+  }
 }

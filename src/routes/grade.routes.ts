@@ -8,12 +8,12 @@ const gradeRouter = express.Router();
 const gradeController = new GradeController();
 gradeRouter.post(
   "/bulk",
-  JoiValidationMiddleware(CreateGradeDto),
+  JoiValidationMiddleware({ classBodyType: CreateGradeDto }),
   gradeController.createEmptyGradeBulk()
 );
 gradeRouter.patch(
   "/:user_id/subject/:subject/tahun/:tahun_ajaran",
-  JoiValidationMiddleware(UpdateGradeDto),
+  JoiValidationMiddleware({ classBodyType: UpdateGradeDto }),
   gradeController.updateGradeByUserIdNTahun()
 );
 export default gradeRouter;

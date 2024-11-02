@@ -1,7 +1,9 @@
 const date = new Date();
-const utc7Date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
-
-console.log(utc7Date.toISOString()); // ISO format will reflect the time in UTC+7
-
-date.setHours(15, 0, 0, 0);
 console.log(date);
+date.setHours(17, 0, 0, 0);
+console.log(date);
+
+const baba = new Date("2024/10/10");
+console.log("baba");
+baba.setHours(17, 0, 0, 0);
+console.log(baba.toLocaleString());

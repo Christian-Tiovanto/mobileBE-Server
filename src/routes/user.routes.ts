@@ -9,12 +9,12 @@ const userController = new UserController();
 const authController = new AuthController();
 userRouter.post(
   "/login",
-  JoiValidationMiddleware(LoginDto),
+  JoiValidationMiddleware({ classBodyType: LoginDto }),
   authController.login()
 );
 userRouter.post(
   "/signup",
-  JoiValidationMiddleware(CreateUserDto),
+  JoiValidationMiddleware({ classBodyType: CreateUserDto }),
   authController.signUp()
 );
 export default userRouter;
