@@ -6,6 +6,8 @@ import {
 } from "joi-class-decorators";
 import { IUser } from "../models/UserModel";
 import { UserRole } from "../enums/user-role";
+import { Types } from "mongoose";
+import { ValidationRegex } from "../enums/regex";
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateUserDto implements IUser {
   @JoiSchema(Joi.string().required())
@@ -22,4 +24,6 @@ export class CreateUserDto implements IUser {
       .required()
   )
   role: UserRole;
+  @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).optional())
+  class_id: Types.ObjectId;
 }
