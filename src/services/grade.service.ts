@@ -1,4 +1,5 @@
 import { CreateGradeDto } from "../dtos/create-grade.dto";
+import { UpdateGradeDto } from "../dtos/update-grade.dto";
 import { GradeSubject } from "../enums/grade-list";
 import Grade, { GradeDocument, IGrade } from "../models/grade.model";
 import AppError from "../utils/appError";
@@ -38,17 +39,34 @@ export class GradeService {
     });
     return grade;
   }
-  // async findGradeByUserIdnTahun(userId: string, tahunAjaran: string) {
-  //   const grade = await Grade.findOne({
-  //     user_id: userId,
-  //     tahun_ajaran: tahunAjaran,
-  //   }).exec();
-  //   if (!grade) throw new AppError("no grade found", 404);
-  //   return grade;
-  // }
 
-  // async updateGradeByUserIdNTahun() {
-  //   const {};
-  //   const grade = await this.findGradeByUserIdnTahun();
-  // }
+  async updateGradeByUserIdNTahun(
+    updateGradeDto: UpdateGradeDto,
+    userId: string,
+    subject: string,
+    tahunAjaran: string
+  ) {
+    const grade = await this.findGradeByUserIdnTahunNSub(
+      userId,
+      tahunAjaran,
+      subject
+    );
+    Object.assign(grade, updateGradeDto);
+    await grade.save();
+    return grade;
+  }
+
+  async findGradeByUserIdnTahunNSub(
+    userId: string,
+    tahunAjaran: string,
+    subject
+  ) {
+    const grade = await Grade.findOne({
+      user_id: userId,
+      tahun_ajaran: tahunAjaran,
+      subject,
+    }).exec();
+    if (!grade) throw new AppError("no grade found", 404);
+    return grade;
+  }
 }

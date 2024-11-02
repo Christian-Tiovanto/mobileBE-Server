@@ -16,4 +16,21 @@ export class GradeController {
       }
     );
   }
+
+  updateGradeByUserIdNTahun() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const grade = await gradeService.updateGradeByUserIdNTahun(
+          req.body,
+          req.params.user_id,
+          req.params.subject,
+          req.params.tahun_ajaran
+        );
+        return res.status(200).json({
+          status: "success",
+          data: grade,
+        });
+      }
+    );
+  }
 }

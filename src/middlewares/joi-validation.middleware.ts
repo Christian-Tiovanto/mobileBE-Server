@@ -3,7 +3,7 @@ import Joi from "joi";
 import { getClassSchema, JoiSchemaOptions } from "joi-class-decorators";
 import AppError from "../utils/appError";
 
-export function JoiValidatoinMiddleware(classType: any) {
+export function JoiValidationMiddleware(classType: any) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const schema = getClassSchema(classType);
