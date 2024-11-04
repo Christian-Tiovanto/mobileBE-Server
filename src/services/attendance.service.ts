@@ -2,9 +2,9 @@ import { CreateAttendanceDto } from "../dtos/create-attendance.dto";
 import Attendance from "../models/attendance.model";
 import AppError from "../utils/appError";
 import { ClassroomService } from "./classroom.service";
-import { UserService } from "./user.service";
+import { StudentService } from "./student.service";
 
-const userService = new UserService();
+const userService = new StudentService();
 const classroomService = new ClassroomService();
 export class AttendanceService {
   constructor() {}
@@ -20,7 +20,7 @@ export class AttendanceService {
       class_id.toString(),
       date
     );
-    await userService.findUserByUserId(user_id.toString());
+    await userService.findStudentById(user_id.toString());
     await classroomService.findClassroomById(
       createAttendanceDto.class_id.toString()
     );

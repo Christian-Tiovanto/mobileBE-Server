@@ -1,0 +1,26 @@
+import Joi from "joi";
+import { JoiSchema, JoiSchemaOptions } from "joi-class-decorators";
+import { IStudent } from "../models/student.model";
+import { ITeacher } from "../models/teacher.model";
+import { GradeSubject } from "../enums/grade-list";
+@JoiSchemaOptions({ allowUnknown: false })
+export class CreateTeacherDto implements Omit<ITeacher, "role"> {
+  @JoiSchema(Joi.string().required())
+  name: string;
+  @JoiSchema(Joi.string().required())
+  password: string;
+  @JoiSchema(Joi.string().required())
+  phone_number: string;
+  @JoiSchema(Joi.string().required())
+  user_id: string;
+  @JoiSchema(Joi.string().optional())
+  class_id: string;
+  @JoiSchema(Joi.date().required())
+  enrollment_date: Date;
+  @JoiSchema(
+    Joi.string()
+      .valid(...Object.values(GradeSubject))
+      .optional()
+  )
+  subject_teach: GradeSubject[];
+}

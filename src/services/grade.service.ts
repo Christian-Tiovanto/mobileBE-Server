@@ -4,9 +4,9 @@ import { GradeSubject } from "../enums/grade-list";
 import Grade, { GradeDocument, IGrade } from "../models/grade.model";
 import AppError from "../utils/appError";
 import { ClassroomService } from "./classroom.service";
-import { UserService } from "./user.service";
+import { StudentService } from "./student.service";
 
-const userService = new UserService();
+const userService = new StudentService();
 const classService = new ClassroomService();
 export class GradeService {
   constructor() {}
@@ -20,7 +20,7 @@ export class GradeService {
       subject
     );
     if (grade) throw new AppError("grade already created", 400);
-    const users = await userService.getUsersByClassId(class_id);
+    const users = await userService.getStudentsByClassId(class_id);
     const grades: GradeDocument[] = users.map((user) => {
       return new Grade({ user_id: user._id, class_id, subject, tahun_ajaran });
     });

@@ -1,20 +1,19 @@
 import express from "express";
 import { JoiValidationMiddleware } from "../middlewares/joi-validation.middleware";
 import { UserController } from "../controllers/user.controller";
-import { CreateUserDto } from "../dtos/create-user.dto";
+import { CreateStudentDto } from "../dtos/create-student.dto";
 import { LoginDto } from "../dtos/login.dto";
 import { AuthController } from "../controllers/auth.contoller";
-const userRouter = express.Router();
-const userController = new UserController();
+const studentRouter = express.Router();
 const authController = new AuthController();
-userRouter.post(
+studentRouter.post(
   "/login",
   JoiValidationMiddleware({ classBodyType: LoginDto }),
-  authController.login()
+  authController.loginStudent()
 );
-userRouter.post(
+studentRouter.post(
   "/signup",
-  JoiValidationMiddleware({ classBodyType: CreateUserDto }),
-  authController.signUp()
+  JoiValidationMiddleware({ classBodyType: CreateStudentDto }),
+  authController.signUpStudent()
 );
-export default userRouter;
+export default studentRouter;

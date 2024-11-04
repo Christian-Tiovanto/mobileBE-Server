@@ -1,28 +1,23 @@
-import mongoose, {
-  HydratedDocument,
-  Model,
-  model,
-  Schema,
-  Types,
-} from "mongoose";
+import { HydratedDocument, Model, model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { UserRole } from "../enums/user-role";
 
-export interface IUser {
+export interface IStudent {
   name: string;
   user_id: string;
   password: string;
   phone_number: string;
-  role: UserRole;
   class_id: string;
+  role: UserRole;
+  tahun_ajaran: string;
 }
 
-interface IUserMethods {
+interface IStudentMethods {
   correctPassword(candidatePassword: string, userPassword: string): boolean;
 }
-export type UserModel = Model<IUser, {}, IUserMethods>;
-export type UserDocument = HydratedDocument<IUser>;
-const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+export type StudentModel = Model<IStudent, {}, IStudentMethods>;
+export type StudentDocument = HydratedDocument<IStudent>;
+const studentSchema = new Schema<IStudent, StudentModel, IStudentMethods>(
   {
     name: String,
     user_id: {
@@ -41,27 +36,30 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       select: false,
       unique: true,
     },
-    role: {
-      type: String,
-      enum: UserRole,
-      required: [true, "User need a role"],
-    },
     class_id: {
       type: String,
       ref: "classrooms",
+    },
+    role: {
+      type: String,
+      default: UserRole.STUDENT,
+    },
+    tahun_ajaran: {
+      type: String,
+      required: [true, "Please provide tahun ajaran"],
     },
   },
   { versionKey: false }
 );
 
-userSchema.pre("save", async function (next) {
+studentSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
 
   next();
 });
 
-userSchema.method(
+studentSchema.method(
   "correctPassword",
   async function correctPassword(
     candidatePassword: string,
@@ -70,5 +68,5 @@ userSchema.method(
     return await bcrypt.compare(candidatePassword, userPassword);
   }
 );
-const User = model<IUser, UserModel>("User", userSchema);
-export default User;
+const Student = model<IStudent, StudentModel>("student", studentSchema);
+export default Student;
