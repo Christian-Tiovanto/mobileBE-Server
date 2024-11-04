@@ -4,7 +4,7 @@ import AppError from "../utils/appError";
 import { ClassroomService } from "./classroom.service";
 import { StudentService } from "./student.service";
 
-const userService = new StudentService();
+const studentService = new StudentService();
 const classroomService = new ClassroomService();
 export class AttendanceService {
   constructor() {}
@@ -20,7 +20,7 @@ export class AttendanceService {
       class_id.toString(),
       date
     );
-    await userService.findStudentById(user_id.toString());
+    await studentService.findStudentById(user_id.toString());
     await classroomService.findClassroomById(
       createAttendanceDto.class_id.toString()
     );

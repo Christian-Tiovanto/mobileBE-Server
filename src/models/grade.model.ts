@@ -29,6 +29,7 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
     user_id: {
       type: Schema.Types.ObjectId,
       required: [true, "please provide a user_id"],
+      ref: "students",
     },
     class_id: {
       type: String,

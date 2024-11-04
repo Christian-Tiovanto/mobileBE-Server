@@ -20,7 +20,7 @@ const attendanceSchema = new Schema<IAttendance, AttendanceModel>(
     user_id: {
       type: Schema.Types.ObjectId,
       required: [true, "please provide a user_id"],
-      ref: "users",
+      ref: "students",
     },
     status: {
       type: String,
