@@ -42,8 +42,7 @@ export class AuthService {
     return { user, token };
   }
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
-    const { user_id, class_id } = createTeacherDto;
-    if (class_id) await classService.findClassroomById(class_id);
+    const { user_id } = createTeacherDto;
     const user = await Teacher.findOne({ user_id }).select("+password");
     if (user)
       throw new AppError("user_id already exist, use another user_id", 400);

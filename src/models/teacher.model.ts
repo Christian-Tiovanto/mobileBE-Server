@@ -8,10 +8,11 @@ export interface ITeacher {
   user_id: string;
   password: string;
   phone_number: string;
-  class_id: string;
+  class_id: string[];
   enrollment_date: Date;
   role: UserRole;
   subject_teach: GradeSubject[];
+  homeroom_class: string;
 }
 
 interface ITeacherMethods {
@@ -39,6 +40,11 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       unique: true,
     },
     class_id: {
+      type: [String],
+      ref: "classrooms",
+      default: [],
+    },
+    homeroom_class: {
       type: String,
       ref: "classrooms",
     },

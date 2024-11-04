@@ -4,7 +4,9 @@ import { IStudent } from "../models/student.model";
 import { ITeacher } from "../models/teacher.model";
 import { GradeSubject } from "../enums/grade-list";
 @JoiSchemaOptions({ allowUnknown: false })
-export class CreateTeacherDto implements Omit<ITeacher, "role"> {
+export class CreateTeacherDto
+  implements Omit<ITeacher, "role" | "homeroom_class" | "class_id">
+{
   @JoiSchema(Joi.string().required())
   name: string;
   @JoiSchema(Joi.string().required())
@@ -13,8 +15,6 @@ export class CreateTeacherDto implements Omit<ITeacher, "role"> {
   phone_number: string;
   @JoiSchema(Joi.string().required())
   user_id: string;
-  @JoiSchema(Joi.string().optional())
-  class_id: string;
   @JoiSchema(Joi.date().required())
   enrollment_date: Date;
   @JoiSchema(
