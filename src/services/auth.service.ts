@@ -19,7 +19,7 @@ export class AuthService {
 
   async loginStudent(loginDto: LoginDto) {
     const { user_id, password } = loginDto;
-    const user = await userService.findStudentById(user_id);
+    const user = await userService.findStudentByUserId(user_id);
     await user.correctPassword(password, user.password);
     const token = await this.signToken(user.user_id);
     return { user, token };

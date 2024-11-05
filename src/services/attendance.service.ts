@@ -20,7 +20,7 @@ export class AttendanceService {
       class_id.toString(),
       date
     );
-    await studentService.findStudentById(user_id.toString());
+    await studentService.findStudentByUserId(user_id.toString());
     await classroomService.findClassroomById(
       createAttendanceDto.class_id.toString()
     );
