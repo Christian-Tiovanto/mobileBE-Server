@@ -39,6 +39,7 @@ const studentSchema = new Schema<IStudent, StudentModel, IStudentMethods>(
     class_id: {
       type: String,
       ref: "classrooms",
+      default: null,
     },
     role: {
       type: String,
