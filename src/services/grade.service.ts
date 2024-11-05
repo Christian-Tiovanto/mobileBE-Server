@@ -5,15 +5,23 @@ import Grade, { GradeDocument, IGrade } from "../models/grade.model";
 import AppError from "../utils/appError";
 import { ClassroomService } from "./classroom.service";
 import { StudentService } from "./student.service";
+import { TeacherService } from "./teacher.service";
 
 const userService = new StudentService();
+const teacherService = new TeacherService();
 const classService = new ClassroomService();
 export class GradeService {
   constructor() {}
 
   async createEmptyGradeBulk(createGradeDto: CreateGradeDto) {
-    const { class_id, subject, tahun_ajaran } = createGradeDto;
+    const { class_id, subject, tahun_ajaran, teacher_id } = createGradeDto;
     await classService.findClassroomById(class_id);
+    const teacher = await teacherService.findTeacherById(teacher_id.toString());
+    if (!teacher.subject_teach.includes(subject))
+      throw new AppError(
+        `teacher ${teacher.name} doesnt teach ${subject}`,
+        400
+      );
     const grade = await this.getGradeByClassIdNSubNTahun(
       class_id,
       tahun_ajaran.toString(),

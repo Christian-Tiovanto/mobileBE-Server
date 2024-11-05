@@ -7,7 +7,8 @@ import { ValidationRegex } from "../enums/regex";
 
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateGradeDto
-  implements Pick<IGrade, "subject" | "tahun_ajaran" | "class_id">
+  implements
+    Pick<IGrade, "subject" | "tahun_ajaran" | "class_id" | "teacher_id">
 {
   @JoiSchema(
     Joi.string()
@@ -21,4 +22,7 @@ export class CreateGradeDto
 
   @JoiSchema(Joi.string().required())
   class_id: string;
+
+  @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).required())
+  teacher_id: Types.ObjectId;
 }
