@@ -36,7 +36,7 @@ export class AuthService {
   }
   async loginTeacher(loginDto: LoginDto) {
     const { user_id, password } = loginDto;
-    const user = await teacherService.findTeacherById(user_id);
+    const user = await teacherService.findTeacherByUserId(user_id);
     await user.correctPassword(password, user.password);
     const token = await this.signToken(user.user_id);
     return { user, token };

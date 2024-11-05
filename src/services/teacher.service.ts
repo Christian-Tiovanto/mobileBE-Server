@@ -3,7 +3,10 @@ import { CreateStudentDto } from "../dtos/create-student.dto";
 import AppError from "../utils/appError";
 import Teacher from "../models/teacher.model";
 import { CreateTeacherDto } from "../dtos/create-teacher.dto";
+import { UpdateTeacherDto } from "../dtos/update-teacher-teach.dto";
+import { ClassroomService } from "./classroom.service";
 
+const classroomService = new ClassroomService();
 export class TeacherService {
   constructor() {}
 
@@ -12,8 +15,28 @@ export class TeacherService {
     await user.save();
     return user;
   }
-  async findTeacherById(userId: string) {
+
+  async updateTeacher(userId: string, updateTeacherDto: UpdateTeacherDto) {
+    if (updateTeacherDto.homeroom_class)
+      await classroomService.findClassroomById(updateTeacherDto.homeroom_class);
+    if (updateTeacherDto.class_id) {
+      for (const class_id of updateTeacherDto.class_id) {
+        await classroomService.findClassroomById(class_id);
+      }
+    }
+    const teacher = await this.findTeacherById(userId);
+    Object.assign(teacher, updateTeacherDto);
+
+    await teacher.save();
+    return teacher;
+  }
+  async findTeacherByUserId(userId: string) {
     const user = await Teacher.findOne({ user_id: userId }).select("+password");
+    if (!user) throw new AppError("no user with that id", 404);
+    return user;
+  }
+  async findTeacherById(userId: string) {
+    const user = await Teacher.findById(userId).select("+password");
     if (!user) throw new AppError("no user with that id", 404);
     return user;
   }
