@@ -30,7 +30,13 @@ export class GradeService {
     if (grade) throw new AppError("grade already created", 400);
     const users = await userService.getStudentsByClassId(class_id);
     const grades: GradeDocument[] = users.map((user) => {
-      return new Grade({ user_id: user._id, class_id, subject, tahun_ajaran });
+      return new Grade({
+        user_id: user._id,
+        class_id,
+        subject,
+        tahun_ajaran,
+        teacher_id,
+      });
     });
     await Grade.bulkSave(grades);
   }
