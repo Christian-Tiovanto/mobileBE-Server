@@ -1,10 +1,14 @@
-import { Types } from "mongoose";
+import { connection, Types } from "mongoose";
 import { CreateStudentDto } from "../dtos/create-student.dto";
 import Student from "../models/student.model";
 import AppError from "../utils/appError";
 import { UpdateStudentDto } from "../dtos/update-student.dto";
 import { ClassroomService } from "./classroom.service";
+import { FirebaseService } from "./firebase.service";
+import { extname } from "path";
+import { Request } from "express";
 
+const firebaseService = new FirebaseService();
 const classroomService = new ClassroomService();
 export class StudentService {
   constructor() {}
@@ -37,5 +41,27 @@ export class StudentService {
     Object.assign(user, updateStudentDto);
     await user.save();
     return user;
+  }
+
+  async uploadStudentPhotoById(id: string, req: Request) {
+    const student = await this.findStudentById(id);
+
+    const session = await connection.startSession();
+    await session.withTransaction(async () => {
+      const url = `photo_profile_student_${student.user_id}${extname(
+        req.file.originalname
+      )}`;
+      student.photo_url = url;
+      await firebaseService.uploadPhoto(req.file, url);
+      await student.save({ session });
+    });
+    await session.endSession();
+    return student;
+  }
+
+  async getStudentPhotoById(id: string) {
+    const student = await this.findStudentById(id);
+    const photo = await firebaseService.getPhoto(student.photo_url);
+    return { photo, student };
   }
 }

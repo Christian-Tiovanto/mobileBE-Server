@@ -7,7 +7,7 @@ import { ClassroomService } from "./classroom.service";
 import { StudentService } from "./student.service";
 import { TeacherService } from "./teacher.service";
 
-const userService = new StudentService();
+const studentService = new StudentService();
 const teacherService = new TeacherService();
 const classService = new ClassroomService();
 export class GradeService {
@@ -28,7 +28,9 @@ export class GradeService {
       subject
     );
     if (grade) throw new AppError("grade already created", 400);
-    const users = await userService.getStudentsByClassId(class_id);
+    if (!teacher.subject_teach.includes(subject))
+      throw new AppError(`this teacher doesnt teach ${subject} `, 400);
+    const users = await studentService.getStudentsByClassId(class_id);
     const grades: GradeDocument[] = users.map((user) => {
       return new Grade({
         user_id: user._id,

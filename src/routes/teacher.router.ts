@@ -7,11 +7,11 @@ import { TeacherController } from "../controllers/teacher.controller";
 import { UpdateTeacherDto } from "../dtos/update-teacher-teach.dto";
 import multer from "multer";
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const teacherRouter = express.Router();
 const authController = new AuthController();
 const teacherController = new TeacherController();
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 teacherRouter.post(
   "/login",
