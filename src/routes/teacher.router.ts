@@ -1,15 +1,18 @@
 import express from "express";
 import { JoiValidationMiddleware } from "../middlewares/joi-validation.middleware";
-import { StudentController } from "../controllers/user.controller";
-import { CreateStudentDto } from "../dtos/create-student.dto";
 import { LoginDto } from "../dtos/login.dto";
 import { AuthController } from "../controllers/auth.contoller";
 import { CreateTeacherDto } from "../dtos/create-teacher.dto";
 import { TeacherController } from "../controllers/teacher.controller";
 import { UpdateTeacherDto } from "../dtos/update-teacher-teach.dto";
+import multer from "multer";
+
 const teacherRouter = express.Router();
 const authController = new AuthController();
 const teacherController = new TeacherController();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 teacherRouter.post(
   "/login",
   JoiValidationMiddleware({ classBodyType: LoginDto }),
@@ -25,4 +28,8 @@ teacherRouter.patch(
   JoiValidationMiddleware({ classBodyType: UpdateTeacherDto }),
   teacherController.updateTeacherTeach()
 );
+teacherRouter
+  .route("/:teacher_id/photo")
+  .patch(upload.single("photo"), teacherController.uploadTeacherPhotoById())
+  .get(teacherController.getTeacherPhotoById());
 export default teacherRouter;

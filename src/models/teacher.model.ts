@@ -13,6 +13,7 @@ export interface ITeacher {
   role: UserRole;
   subject_teach: GradeSubject[];
   homeroom_class: string;
+  photo_url: string;
 }
 
 interface ITeacherMethods {
@@ -62,6 +63,7 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       enum: UserRole,
       default: UserRole.TEACHER,
     },
+    photo_url: String,
   },
   { versionKey: false }
 );

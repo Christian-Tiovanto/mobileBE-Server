@@ -5,7 +5,8 @@ import { ITeacher } from "../models/teacher.model";
 import { GradeSubject } from "../enums/grade-list";
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateTeacherDto
-  implements Omit<ITeacher, "role" | "homeroom_class" | "class_id">
+  implements
+    Omit<ITeacher, "role" | "homeroom_class" | "class_id" | "photo_url">
 {
   @JoiSchema(Joi.string().required())
   name: string;

@@ -1,11 +1,15 @@
-import { Types } from "mongoose";
+import { connection, Types } from "mongoose";
 import { CreateStudentDto } from "../dtos/create-student.dto";
 import AppError from "../utils/appError";
 import Teacher from "../models/teacher.model";
 import { CreateTeacherDto } from "../dtos/create-teacher.dto";
 import { UpdateTeacherDto } from "../dtos/update-teacher-teach.dto";
 import { ClassroomService } from "./classroom.service";
+import { FirebaseService } from "./firebase.service";
+import { extname } from "path";
+import { Request } from "express";
 
+const firebaseService = new FirebaseService();
 const classroomService = new ClassroomService();
 export class TeacherService {
   constructor() {}
@@ -44,5 +48,27 @@ export class TeacherService {
   async getTeachersByClassId(classId: string) {
     const users = await Teacher.find({ class_id: classId });
     return users;
+  }
+
+  async uploadTeacherPhotoById(id: string, req: Request) {
+    const teacher = await this.findTeacherById(id);
+
+    const session = await connection.startSession();
+    await session.withTransaction(async () => {
+      const url = `photo_profile_teacher_${teacher.user_id}${extname(
+        req.file.originalname
+      )}`;
+      teacher.photo_url = url;
+      await firebaseService.uploadPhoto(req.file, url);
+      await teacher.save({ session });
+    });
+    await session.endSession();
+    return teacher;
+  }
+
+  async getTeacherPhotoById(id: string) {
+    const teacher = await this.findTeacherById(id);
+    const photo = await firebaseService.getPhoto(teacher.photo_url);
+    return { photo, teacher };
   }
 }

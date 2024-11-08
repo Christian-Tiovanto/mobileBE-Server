@@ -1,3 +1,4 @@
 node_modules/
 .env
 dist/
+cdn-db-service-account.json

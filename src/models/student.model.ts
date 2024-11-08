@@ -10,6 +10,7 @@ export interface IStudent {
   class_id: string;
   role: UserRole;
   tahun_ajaran: string;
+  photo_url: string;
 }
 
 interface IStudentMethods {
@@ -49,6 +50,7 @@ const studentSchema = new Schema<IStudent, StudentModel, IStudentMethods>(
       type: String,
       required: [true, "Please provide tahun ajaran"],
     },
+    photo_url: String,
   },
   { versionKey: false }
 );

@@ -3,7 +3,11 @@ import { IStudent } from "../models/student.model";
 import Joi from "joi";
 
 export class UpdateStudentDto
-  implements Omit<IStudent, "user_id" | "role" | "password" | "tahun_ajaran">
+  implements
+    Omit<
+      IStudent,
+      "user_id" | "role" | "password" | "tahun_ajaran" | "photo_url"
+    >
 {
   @JoiSchema(Joi.string().optional())
   name: string;

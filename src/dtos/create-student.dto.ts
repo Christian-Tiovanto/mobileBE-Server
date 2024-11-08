@@ -2,7 +2,7 @@ import Joi from "joi";
 import { JoiSchema, JoiSchemaOptions } from "joi-class-decorators";
 import { IStudent } from "../models/student.model";
 @JoiSchemaOptions({ allowUnknown: false })
-export class CreateStudentDto implements Omit<IStudent, "role"> {
+export class CreateStudentDto implements Omit<IStudent, "role" | "photo_url"> {
   @JoiSchema(Joi.string().required())
   name: string;
   @JoiSchema(Joi.string().required())
