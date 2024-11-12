@@ -51,4 +51,18 @@ export class StudentController {
       }
     );
   }
+
+  getStudentsByClassId() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const students = await studentService.getStudentsByClassId(
+          req.params.class_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: students,
+        });
+      }
+    );
+  }
 }

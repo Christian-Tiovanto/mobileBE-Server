@@ -32,4 +32,9 @@ studentRouter
   .route("/:student_id/photo")
   .patch(upload.single("photo"), studentController.uploadStudentPhotoById())
   .get(studentController.getStudentPhotoById());
+
+studentRouter.get(
+  "/class/:class_id/all",
+  studentController.getStudentsByClassId()
+);
 export default studentRouter;
