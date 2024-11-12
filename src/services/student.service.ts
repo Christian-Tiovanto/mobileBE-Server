@@ -28,6 +28,16 @@ export class StudentService {
     if (!user) throw new AppError("no user with that id", 404);
     return user;
   }
+  async findStudentByEmail(email: string) {
+    const user = await Student.findOne({ email: email });
+    if (!user) throw new AppError("no user with that id", 404);
+    return user;
+  }
+  async findStudentByPhoneNumber(phoneNumber: string) {
+    const user = await Student.findOne({ phone_number: phoneNumber });
+    if (!user) throw new AppError("no user with that id", 404);
+    return user;
+  }
 
   async getStudentsByClassId(classId: string) {
     const users = await Student.find({ class_id: classId });

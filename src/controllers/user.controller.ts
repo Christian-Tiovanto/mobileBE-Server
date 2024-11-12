@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { StudentService } from "../services/student.service";
 import catchAsync from "../utils/catch-async";
 import { extname } from "path";
+import { FirebaseService } from "../services/firebase.service";
+const firebaseService = new FirebaseService();
 const studentService = new StudentService();
 export class StudentController {
   constructor() {}
@@ -61,6 +63,29 @@ export class StudentController {
         res.status(200).json({
           status: "success",
           data: students,
+        });
+      }
+    );
+  }
+
+  tesSignUpFirebase() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const tes = await firebaseService.signUpUser(req.body);
+        res.status(201).json({
+          status: "success",
+          data: tes,
+        });
+      }
+    );
+  }
+  tesGetFirebase() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const tes = await firebaseService.getUser();
+        res.status(200).json({
+          status: "success",
+          data: tes,
         });
       }
     );

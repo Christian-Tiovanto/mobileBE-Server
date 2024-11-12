@@ -16,7 +16,7 @@ export interface ITeacher {
   photo_url: string;
 }
 
-interface ITeacherMethods {
+export interface ITeacherMethods {
   correctPassword(candidatePassword: string, userPassword: string): boolean;
 }
 export type TeacherModel = Model<ITeacher, {}, ITeacherMethods>;

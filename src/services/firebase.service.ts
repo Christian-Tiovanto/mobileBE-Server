@@ -1,11 +1,14 @@
 import { Bucket } from "@google-cloud/storage";
 import * as fileType from "file-type";
 import { getStorage } from "firebase-admin/storage";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 import { extname, join } from "path";
 import AppError from "../utils/appError";
 import multer from "multer";
 const storage = multer.memoryStorage();
 import admin from "firebase-admin";
+import { CreateStudentDto } from "../dtos/create-student.dto";
 
 admin.initializeApp({
   credential: admin.credential.cert(
@@ -48,5 +51,22 @@ export class FirebaseService {
     await this.storageBucket.file(fileName).delete({
       ifGenerationMatch: metadata.generation,
     });
+  }
+
+  async signUpUser(createStudentDto: CreateStudentDto) {
+    const userRecord = await getAuth().createUser({
+      email: createStudentDto.email,
+      phoneNumber: `+62${createStudentDto.phone_number}`,
+      password: createStudentDto.password,
+      displayName: createStudentDto.name,
+    });
+    console.log("Successfully created new user:", userRecord.uid);
+    return userRecord;
+  }
+
+  async getUser(email: string) {
+    const userrecord = await getAuth().getUserByEmail(email);
+    console.log(userrecord);
+    return userrecord;
   }
 }

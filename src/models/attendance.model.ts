@@ -14,7 +14,7 @@ export interface IAttendance {
 }
 
 export type AttendanceModel = Model<IAttendance, {}>;
-export type UserDocument = HydratedDocument<IAttendance>;
+export type AttendanceDocument = HydratedDocument<IAttendance>;
 const attendanceSchema = new Schema<IAttendance, AttendanceModel>(
   {
     user_id: {
