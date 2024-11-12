@@ -33,4 +33,17 @@ export class GradeController {
       }
     );
   }
+
+  getSubjectList() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const subject = gradeService.getSubjectList();
+        console.log(subject);
+        return res.status(200).json({
+          status: "success",
+          data: subject,
+        });
+      }
+    );
+  }
 }

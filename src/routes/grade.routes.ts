@@ -16,4 +16,5 @@ gradeRouter.patch(
   JoiValidationMiddleware({ classBodyType: UpdateGradeDto }),
   gradeController.updateGradeByUserIdNTahun()
 );
+gradeRouter.get("/subject", gradeController.getSubjectList());
 export default gradeRouter;

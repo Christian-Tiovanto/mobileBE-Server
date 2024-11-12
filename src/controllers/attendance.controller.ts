@@ -21,11 +21,28 @@ export class AttendanceController {
   getAttendancesStatusForADate() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
-        const attendances = await attendanceService.getAttendancesForADate(
-          req.params.class_id,
-          req.params.tahun_ajaran,
-          new Date(`${req.query.date}`)
-        );
+        const attendances =
+          await attendanceService.getAttendancesStatusForADate(
+            req.params.class_id,
+            req.params.tahun_ajaran,
+            new Date(`${req.query.date}`)
+          );
+        return res.status(200).json({
+          status: "success",
+          data: attendances,
+        });
+      }
+    );
+  }
+
+  getAttendanceByClassIdNTahun() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const attendances =
+          await attendanceService.getAttendanceByClassIdNTahun(
+            req.params.class_id,
+            req.params.tahun_ajaran
+          );
         return res.status(200).json({
           status: "success",
           data: attendances,

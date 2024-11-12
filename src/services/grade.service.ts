@@ -85,4 +85,9 @@ export class GradeService {
     if (!grade) throw new AppError("no grade found", 404);
     return grade;
   }
+
+  getSubjectList() {
+    console.log(Object.values(GradeSubject));
+    return Object.values(GradeSubject);
+  }
 }

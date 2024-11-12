@@ -12,8 +12,12 @@ attendanceRouter.post(
 );
 
 attendanceRouter.get(
-  "/class/:class_id/tahun/:tahun_ajaran",
+  "/class/:class_id/tahun/:tahun_ajaran/status",
   JoiValidationMiddleware({ classQueryType: AttendanceDateQuery }),
   attendanceController.getAttendancesStatusForADate()
+);
+attendanceRouter.get(
+  "/class/:class_id/tahun/:tahun_ajaran",
+  attendanceController.getAttendanceByClassIdNTahun()
 );
 export default attendanceRouter;

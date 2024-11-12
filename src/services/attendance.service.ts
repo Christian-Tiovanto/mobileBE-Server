@@ -48,7 +48,7 @@ export class AttendanceService {
     return Attendance;
   }
 
-  async getAttendancesForADate(
+  async getAttendancesStatusForADate(
     classId: string,
     tahunAjaran: string,
     date: Date
@@ -83,6 +83,14 @@ export class AttendanceService {
         },
       },
     ]);
+    return attendances;
+  }
+
+  async getAttendanceByClassIdNTahun(classId: string, tahunAjaran: string) {
+    const attendances = await Attendance.find({
+      class_id: classId,
+      tahun_ajaran: tahunAjaran,
+    });
     return attendances;
   }
 }
