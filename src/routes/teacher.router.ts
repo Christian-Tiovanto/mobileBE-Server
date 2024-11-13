@@ -32,4 +32,8 @@ teacherRouter
   .route("/:teacher_id/photo")
   .patch(upload.single("photo"), teacherController.uploadTeacherPhotoById())
   .get(teacherController.getTeacherPhotoById());
+teacherRouter.get(
+  "/:teacher_id/class-teach",
+  teacherController.getClassTeacherTeach()
+);
 export default teacherRouter;

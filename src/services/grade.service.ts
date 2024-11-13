@@ -60,12 +60,14 @@ export class GradeService {
     updateGradeDto: UpdateGradeDto,
     userId: string,
     subject: string,
-    tahunAjaran: string
+    tahunAjaran: string,
+    classId: string
   ) {
     const grade = await this.findGradeByUserIdnTahunNSub(
       userId,
       tahunAjaran,
-      subject
+      subject,
+      classId
     );
     Object.assign(grade, updateGradeDto);
     await grade.save();
@@ -75,13 +77,30 @@ export class GradeService {
   async findGradeByUserIdnTahunNSub(
     userId: string,
     tahunAjaran: string,
-    subject
+    subject,
+    classId: string
   ) {
     const grade = await Grade.findOne({
       user_id: userId,
       tahun_ajaran: tahunAjaran,
       subject,
+      class_id: classId,
     }).exec();
+    if (!grade) throw new AppError("no grade found", 404);
+    return grade;
+  }
+  async findGradeByUserIdnTahunNSubPopulate(
+    userId: string,
+    tahunAjaran: string,
+    subject,
+    classId: string
+  ) {
+    const grade = await Grade.findOne({
+      user_id: userId,
+      tahun_ajaran: tahunAjaran,
+      subject,
+      class_id: classId,
+    }).populate("user_id");
     if (!grade) throw new AppError("no grade found", 404);
     return grade;
   }

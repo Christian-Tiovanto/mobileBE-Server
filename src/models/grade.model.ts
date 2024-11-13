@@ -30,16 +30,17 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
     user_id: {
       type: Schema.Types.ObjectId,
       required: [true, "please provide a user_id"],
-      ref: "students",
+      ref: "student",
     },
     class_id: {
       type: String,
       required: [true, "please provide a class_id"],
+      ref: "classroom",
     },
     teacher_id: {
       type: Schema.Types.ObjectId,
       required: [true, "please provide a teacher id"],
-      ref: "teachers",
+      ref: "teacher",
     },
     assignment_score: { default: 0, type: Number },
     mid_term_score: { default: 0, type: Number },

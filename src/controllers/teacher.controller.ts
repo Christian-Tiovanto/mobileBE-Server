@@ -51,4 +51,18 @@ export class TeacherController {
       }
     );
   }
+
+  getClassTeacherTeach() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const classrooms = await teacherService.getClassTeacherTeach(
+          req.params.teacher_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: classrooms,
+        });
+      }
+    );
+  }
 }

@@ -17,7 +17,7 @@ export class AuthController {
 
     // Remove password from output
     user.password = undefined;
-
+    console.log("bapak dia");
     res.status(statusCode).json({
       status: "success",
       token,
@@ -54,7 +54,9 @@ export class AuthController {
   signUpTeacher() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
+        console.log("eaaa");
         const userAndToken = await authService.signUpTeacher(req.body);
+        console.log("siniii");
         this.sendToken(userAndToken.newUser, 200, res, userAndToken.token);
       }
     );

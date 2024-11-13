@@ -12,6 +12,7 @@ export function JoiValidationMiddleware({
 }) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("masok sini?");
       if (Object.keys(req.body).length !== 0) {
         const schema = getClassSchema(classBodyType);
         Joi.assert({ ...req.body }, schema);

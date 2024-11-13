@@ -26,6 +26,13 @@ export class FirebaseService {
   }
 
   async uploadPhoto(file: Express.Multer.File, fileName: string) {
+    console.log(
+      `.${(await fileType.fromBuffer(file.buffer)).ext}` !=
+        extname(file.originalname)
+    );
+    console.log("`.${(await fileType.fromBuffer(file.buffer)).ext}`");
+    console.log(`.${(await fileType.fromBuffer(file.buffer)).ext}`);
+    console.log(extname(file.originalname));
     if (
       `.${(await fileType.fromBuffer(file.buffer)).ext}` !=
       extname(file.originalname)

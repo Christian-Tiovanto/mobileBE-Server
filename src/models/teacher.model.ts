@@ -48,12 +48,13 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
     },
     class_id: {
       type: [String],
-      ref: "classrooms",
+      ref: "classroom",
       default: [],
     },
     homeroom_class: {
       type: String,
-      ref: "classrooms",
+      ref: "classroom",
+      default: null,
     },
     enrollment_date: {
       type: Date,
