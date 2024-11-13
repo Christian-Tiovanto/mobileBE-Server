@@ -46,14 +46,14 @@ export class TeacherService {
   }
   async findTeacherByEmail(email: string) {
     const user = await Teacher.findOne({ email: email }).select("+password");
-    if (!user) throw new AppError("no user with that id", 404);
+    if (!user) throw new AppError("no user with that email", 404);
     return user;
   }
   async findTeacherByPhoneNumber(phoneNumber: string) {
     const user = await Teacher.findOne({ phone_number: phoneNumber }).select(
       "+password"
     );
-    if (!user) throw new AppError("no user with that id", 404);
+    if (!user) throw new AppError("no user with that phone_number", 404);
     return user;
   }
 
@@ -82,5 +82,12 @@ export class TeacherService {
     const teacher = await this.findTeacherById(id);
     const photo = await firebaseService.getPhoto(teacher.photo_url);
     return { photo, teacher };
+  }
+
+  async getClassTeacherTeach(id: string) {
+    const classrooms = await Teacher.find({ _id: id })
+      .populate("class_id")
+      .populate("homeroom_class");
+    console.log(classrooms);
   }
 }

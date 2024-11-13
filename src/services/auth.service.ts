@@ -46,7 +46,7 @@ export class AuthService {
     const user = await Student.findOne({ email }).select("+password");
     if (user)
       throw new AppError("user_id already exist, use another user_id", 400);
-    await firebaseService.signUpUser(createUserDto);
+    await firebaseService.signUpStudent(createUserDto);
     const newUser = await userService.createStudent(createUserDto);
     const token = await this.signToken(newUser.user_id);
     return { newUser, token };
@@ -55,15 +55,15 @@ export class AuthService {
     const { type, password } = loginDto;
     let teacher: TeacherDocument & ITeacherMethods;
     if (type === LoginType.EMAIL) {
-      teacher = await teacherService.findTeacherById(loginDto.email);
+      teacher = await teacherService.findTeacherByEmail(loginDto.email);
     } else {
       teacher = await teacherService.findTeacherByPhoneNumber(
         loginDto.phone_number
       );
     }
-
+    await firebaseService.getUser(loginDto.email);
     await teacher.correctPassword(password, teacher.password);
-    const token = await this.signToken(teacher.user_id);
+    const token = await this.signToken(teacher._id);
     return { user: teacher, token };
   }
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
@@ -72,6 +72,7 @@ export class AuthService {
     if (user)
       throw new AppError("user_id already exist, use another user_id", 400);
     const newUser = await teacherService.createTeacher(createTeacherDto);
+    await firebaseService.signUpTeacher(createTeacherDto);
     const token = await this.signToken(newUser.user_id);
     return { newUser, token };
   }

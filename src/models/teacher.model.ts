@@ -6,6 +6,7 @@ import { UserRole } from "../enums/user-role";
 export interface ITeacher {
   name: string;
   user_id: string;
+  email: string;
   password: string;
   phone_number: string;
   class_id: string[];
@@ -24,6 +25,11 @@ export type TeacherDocument = HydratedDocument<ITeacher>;
 const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
   {
     name: String,
+    email: {
+      type: String,
+      required: [true, "please provide a email"],
+      unique: true,
+    },
     user_id: {
       type: String,
       required: [true, "please provide a user id"],

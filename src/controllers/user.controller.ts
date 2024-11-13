@@ -71,7 +71,7 @@ export class StudentController {
   tesSignUpFirebase() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
-        const tes = await firebaseService.signUpUser(req.body);
+        const tes = await firebaseService.signUpStudent(req.body);
         res.status(201).json({
           status: "success",
           data: tes,
@@ -79,15 +79,15 @@ export class StudentController {
       }
     );
   }
-  tesGetFirebase() {
-    return catchAsync(
-      async (req: Request, res: Response, next: NextFunction) => {
-        const tes = await firebaseService.getUser();
-        res.status(200).json({
-          status: "success",
-          data: tes,
-        });
-      }
-    );
-  }
+  // tesGetFirebase() {
+  //   return catchAsync(
+  //     async (req: Request, res: Response, next: NextFunction) => {
+  //       const tes = await firebaseService.getUser();
+  //       res.status(200).json({
+  //         status: "success",
+  //         data: tes,
+  //       });
+  //     }
+  //   );
+  // }
 }

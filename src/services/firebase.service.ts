@@ -9,6 +9,7 @@ import multer from "multer";
 const storage = multer.memoryStorage();
 import admin from "firebase-admin";
 import { CreateStudentDto } from "../dtos/create-student.dto";
+import { CreateTeacherDto } from "../dtos/create-teacher.dto";
 
 admin.initializeApp({
   credential: admin.credential.cert(
@@ -53,12 +54,22 @@ export class FirebaseService {
     });
   }
 
-  async signUpUser(createStudentDto: CreateStudentDto) {
+  async signUpStudent(createStudentDto: CreateStudentDto) {
     const userRecord = await getAuth().createUser({
       email: createStudentDto.email,
       phoneNumber: `+62${createStudentDto.phone_number}`,
       password: createStudentDto.password,
       displayName: createStudentDto.name,
+    });
+    console.log("Successfully created new user:", userRecord.uid);
+    return userRecord;
+  }
+  async signUpTeacher(createTeacherDto: CreateTeacherDto) {
+    const userRecord = await getAuth().createUser({
+      email: createTeacherDto.email,
+      phoneNumber: `+62${createTeacherDto.phone_number}`,
+      password: createTeacherDto.password,
+      displayName: createTeacherDto.name,
     });
     console.log("Successfully created new user:", userRecord.uid);
     return userRecord;
