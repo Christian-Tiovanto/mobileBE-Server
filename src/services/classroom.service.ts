@@ -16,4 +16,9 @@ export class ClassroomService {
       throw new AppError(`no classroom with id ${classroomId}`, 400);
     return classroom;
   }
+
+  async getAllClassroom() {
+    const classrooms = await Classroom.find({});
+    return classrooms;
+  }
 }

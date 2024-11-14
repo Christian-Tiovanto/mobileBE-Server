@@ -13,6 +13,10 @@ const classroomService = new ClassroomService();
 export class StudentService {
   constructor() {}
 
+  async getAllStudent() {
+    const students = await Student.find({});
+    return students;
+  }
   async createStudent(createStudentDto: CreateStudentDto) {
     const user = await Student.create(createStudentDto);
     await user.save();

@@ -22,6 +22,7 @@ export function JoiValidationMiddleware({
         Joi.assert({ ...req.query }, schemaQuery);
       }
     } catch (err: any) {
+      console.log(err);
       return next(new AppError(err.details[0].message, 400));
     }
 

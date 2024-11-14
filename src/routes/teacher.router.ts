@@ -37,4 +37,8 @@ teacherRouter.get(
   "/:teacher_id/class-teach",
   teacherController.getClassTeacherTeach()
 );
+teacherRouter.delete(
+  "/delete/semua/firebase",
+  authController.deleteAllUserFirebase()
+);
 export default teacherRouter;

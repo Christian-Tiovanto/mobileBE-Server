@@ -79,6 +79,18 @@ export class StudentController {
       }
     );
   }
+
+  getAllStudent() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const students = await studentService.getAllStudent();
+        res.status(200).json({
+          status: "success",
+          data: students,
+        });
+      }
+    );
+  }
   // tesGetFirebase() {
   //   return catchAsync(
   //     async (req: Request, res: Response, next: NextFunction) => {

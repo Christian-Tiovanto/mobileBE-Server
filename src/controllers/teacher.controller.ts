@@ -14,7 +14,7 @@ export class TeacherController {
           req.params.teacher_id,
           req.body
         );
-        res.status(201).json({
+        res.status(200).json({
           status: "success",
           data: teacher,
         });
