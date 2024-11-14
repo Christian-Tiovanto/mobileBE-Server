@@ -70,7 +70,7 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       enum: UserRole,
       default: UserRole.TEACHER,
     },
-    photo_url: String,
+    photo_url: { type: String, default: null },
   },
   { versionKey: false }
 );

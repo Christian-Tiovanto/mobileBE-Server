@@ -63,12 +63,14 @@ export class TeacherService {
   }
 
   async uploadTeacherPhotoById(id: string, req: Request) {
+    console.log("maosk sini atass");
     const teacher = await this.findTeacherById(id);
-
+    console.log(req.file);
     const url = `photo_profile_teacher_${teacher.user_id}${extname(
       req.file.originalname
     )}`;
     teacher.photo_url = url;
+    console.log("maosk sini");
     await firebaseService.uploadPhoto(req.file, url);
     await teacher.save();
     return teacher;
@@ -87,5 +89,10 @@ export class TeacherService {
       .select("class_id homeroom_class");
     console.log(classrooms);
     return classrooms;
+  }
+
+  async getAllTeacher() {
+    const teachers = await Teacher.find({});
+    return teachers;
   }
 }

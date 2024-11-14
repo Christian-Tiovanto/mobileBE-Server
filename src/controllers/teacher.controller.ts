@@ -65,4 +65,16 @@ export class TeacherController {
       }
     );
   }
+
+  getAllTeacher() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const teachers = await teacherService.getAllTeacher();
+        res.status(200).json({
+          status: "success",
+          data: teachers,
+        });
+      }
+    );
+  }
 }

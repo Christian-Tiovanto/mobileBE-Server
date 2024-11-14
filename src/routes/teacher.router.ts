@@ -23,6 +23,7 @@ teacherRouter.post(
   JoiValidationMiddleware({ classBodyType: CreateTeacherDto }),
   authController.signUpTeacher()
 );
+teacherRouter.get("/all/teacher", teacherController.getAllTeacher());
 teacherRouter.patch(
   "/:teacher_id",
   JoiValidationMiddleware({ classBodyType: UpdateTeacherDto }),
