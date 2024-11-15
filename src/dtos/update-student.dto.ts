@@ -10,6 +10,8 @@ export class UpdateStudentDto
     >
 {
   @JoiSchema(Joi.string().optional())
+  email: string;
+  @JoiSchema(Joi.string().optional())
   name: string;
   @JoiSchema(Joi.string().optional())
   phone_number: string;

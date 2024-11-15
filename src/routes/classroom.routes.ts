@@ -9,4 +9,5 @@ classroomRouter.post(
   JoiValidationMiddleware({ classBodyType: CreateClassroomDto }),
   classroomController.createClassroom()
 );
+classroomRouter.get("/all", classroomController.getAllClassroom());
 export default classroomRouter;

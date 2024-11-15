@@ -14,7 +14,7 @@ export class TeacherController {
           req.params.teacher_id,
           req.body
         );
-        res.status(201).json({
+        res.status(200).json({
           status: "success",
           data: teacher,
         });
@@ -48,6 +48,32 @@ export class TeacherController {
           `image/${extname(data.teacher.photo_url).substring(1)}`
         );
         res.send(data.photo[0]);
+      }
+    );
+  }
+
+  getClassTeacherTeach() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const classrooms = await teacherService.getClassTeacherTeach(
+          req.params.teacher_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: classrooms,
+        });
+      }
+    );
+  }
+
+  getAllTeacher() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const teachers = await teacherService.getAllTeacher();
+        res.status(200).json({
+          status: "success",
+          data: teachers,
+        });
       }
     );
   }

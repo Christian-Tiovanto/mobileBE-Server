@@ -23,6 +23,7 @@ teacherRouter.post(
   JoiValidationMiddleware({ classBodyType: CreateTeacherDto }),
   authController.signUpTeacher()
 );
+teacherRouter.get("/all/teacher", teacherController.getAllTeacher());
 teacherRouter.patch(
   "/:teacher_id",
   JoiValidationMiddleware({ classBodyType: UpdateTeacherDto }),
@@ -32,4 +33,12 @@ teacherRouter
   .route("/:teacher_id/photo")
   .patch(upload.single("photo"), teacherController.uploadTeacherPhotoById())
   .get(teacherController.getTeacherPhotoById());
+teacherRouter.get(
+  "/:teacher_id/class-teach",
+  teacherController.getClassTeacherTeach()
+);
+teacherRouter.delete(
+  "/delete/semua/firebase",
+  authController.deleteAllUserFirebase()
+);
 export default teacherRouter;

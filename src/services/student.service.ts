@@ -13,6 +13,10 @@ const classroomService = new ClassroomService();
 export class StudentService {
   constructor() {}
 
+  async getAllStudent() {
+    const students = await Student.find({});
+    return students;
+  }
   async createStudent(createStudentDto: CreateStudentDto) {
     const user = await Student.create(createStudentDto);
     await user.save();
@@ -25,6 +29,16 @@ export class StudentService {
   }
   async findStudentById(id: string) {
     const user = await Student.findOne({ _id: id });
+    if (!user) throw new AppError("no user with that id", 404);
+    return user;
+  }
+  async findStudentByEmail(email: string) {
+    const user = await Student.findOne({ email: email });
+    if (!user) throw new AppError("no user with that id", 404);
+    return user;
+  }
+  async findStudentByPhoneNumber(phoneNumber: string) {
+    const user = await Student.findOne({ phone_number: phoneNumber });
     if (!user) throw new AppError("no user with that id", 404);
     return user;
   }

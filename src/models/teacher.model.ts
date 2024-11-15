@@ -6,6 +6,7 @@ import { UserRole } from "../enums/user-role";
 export interface ITeacher {
   name: string;
   user_id: string;
+  email: string;
   password: string;
   phone_number: string;
   class_id: string[];
@@ -16,7 +17,7 @@ export interface ITeacher {
   photo_url: string;
 }
 
-interface ITeacherMethods {
+export interface ITeacherMethods {
   correctPassword(candidatePassword: string, userPassword: string): boolean;
 }
 export type TeacherModel = Model<ITeacher, {}, ITeacherMethods>;
@@ -24,6 +25,11 @@ export type TeacherDocument = HydratedDocument<ITeacher>;
 const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
   {
     name: String,
+    email: {
+      type: String,
+      required: [true, "please provide a email"],
+      unique: true,
+    },
     user_id: {
       type: String,
       required: [true, "please provide a user id"],
@@ -42,12 +48,13 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
     },
     class_id: {
       type: [String],
-      ref: "classrooms",
+      ref: "classroom",
       default: [],
     },
     homeroom_class: {
       type: String,
-      ref: "classrooms",
+      ref: "classroom",
+      default: null,
     },
     enrollment_date: {
       type: Date,
@@ -63,7 +70,7 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       enum: UserRole,
       default: UserRole.TEACHER,
     },
-    photo_url: String,
+    photo_url: { type: String, default: null },
   },
   { versionKey: false }
 );

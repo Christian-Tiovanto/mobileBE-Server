@@ -11,6 +11,8 @@ export class CreateTeacherDto
   @JoiSchema(Joi.string().required())
   name: string;
   @JoiSchema(Joi.string().required())
+  email: string;
+  @JoiSchema(Joi.string().required())
   password: string;
   @JoiSchema(Joi.string().required())
   phone_number: string;

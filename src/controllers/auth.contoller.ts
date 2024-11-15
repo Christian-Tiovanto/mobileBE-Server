@@ -3,7 +3,9 @@ import catchAsync from "../utils/catch-async";
 import { AuthService } from "../services/auth.service";
 import { StudentDocument } from "../models/student.model";
 import { TeacherDocument } from "../models/teacher.model";
+import { FirebaseService } from "../services/firebase.service";
 const authService = new AuthService();
+const firebaseService = new FirebaseService();
 export class AuthController {
   constructor() {}
 
@@ -17,7 +19,7 @@ export class AuthController {
 
     // Remove password from output
     user.password = undefined;
-
+    console.log("bapak dia");
     res.status(statusCode).json({
       status: "success",
       token,
@@ -54,8 +56,21 @@ export class AuthController {
   signUpTeacher() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
+        console.log("eaaa");
         const userAndToken = await authService.signUpTeacher(req.body);
-        this.sendToken(userAndToken.newUser, 200, res, userAndToken.token);
+        console.log("siniii");
+        this.sendToken(userAndToken.newUser, 201, res, userAndToken.token);
+      }
+    );
+  }
+
+  deleteAllUserFirebase() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        await firebaseService.deleteAllUsersFirebase();
+        res.status(200).json({
+          status: "success",
+        });
       }
     );
   }

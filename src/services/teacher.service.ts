@@ -36,12 +36,24 @@ export class TeacherService {
   }
   async findTeacherByUserId(userId: string) {
     const user = await Teacher.findOne({ user_id: userId }).select("+password");
-    if (!user) throw new AppError("no user with that id", 404);
+    if (!user) throw new AppError("no teacher with that id", 404);
     return user;
   }
   async findTeacherById(userId: string) {
     const user = await Teacher.findById(userId).select("+password");
-    if (!user) throw new AppError("no user with that id", 404);
+    if (!user) throw new AppError("no teacher with that id", 404);
+    return user;
+  }
+  async findTeacherByEmail(email: string) {
+    const user = await Teacher.findOne({ email: email }).select("+password");
+    if (!user) throw new AppError("no teacher with that email", 404);
+    return user;
+  }
+  async findTeacherByPhoneNumber(phoneNumber: string) {
+    const user = await Teacher.findOne({ phone_number: phoneNumber }).select(
+      "+password"
+    );
+    if (!user) throw new AppError("no teacher with that phone_number", 404);
     return user;
   }
 
@@ -51,18 +63,16 @@ export class TeacherService {
   }
 
   async uploadTeacherPhotoById(id: string, req: Request) {
+    console.log("maosk sini atass");
     const teacher = await this.findTeacherById(id);
-
-    const session = await connection.startSession();
-    await session.withTransaction(async () => {
-      const url = `photo_profile_teacher_${teacher.user_id}${extname(
-        req.file.originalname
-      )}`;
-      teacher.photo_url = url;
-      await firebaseService.uploadPhoto(req.file, url);
-      await teacher.save({ session });
-    });
-    await session.endSession();
+    console.log(req.file);
+    const url = `photo_profile_teacher_${teacher.user_id}${extname(
+      req.file.originalname
+    )}`;
+    teacher.photo_url = url;
+    console.log("maosk sini");
+    await firebaseService.uploadPhoto(req.file, url);
+    await teacher.save();
     return teacher;
   }
 
@@ -70,5 +80,19 @@ export class TeacherService {
     const teacher = await this.findTeacherById(id);
     const photo = await firebaseService.getPhoto(teacher.photo_url);
     return { photo, teacher };
+  }
+
+  async getClassTeacherTeach(id: string) {
+    const classrooms = await Teacher.findOne({ _id: id })
+      .populate("class_id")
+      .populate("homeroom_class")
+      .select("class_id homeroom_class");
+    console.log(classrooms);
+    return classrooms;
+  }
+
+  async getAllTeacher() {
+    const teachers = await Teacher.find({});
+    return teachers;
   }
 }

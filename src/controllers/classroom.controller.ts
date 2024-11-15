@@ -17,4 +17,16 @@ export class ClassroomController {
       }
     );
   }
+
+  getAllClassroom() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const classrooms = await classroomService.getAllClassroom();
+        res.status(200).json({
+          status: "success",
+          data: classrooms,
+        });
+      }
+    );
+  }
 }

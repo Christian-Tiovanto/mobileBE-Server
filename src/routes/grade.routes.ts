@@ -12,9 +12,13 @@ gradeRouter.post(
   gradeController.createEmptyGradeBulk()
 );
 gradeRouter.patch(
-  "/:user_id/subject/:subject/tahun/:tahun_ajaran",
+  "/:user_id/subject/:subject/class/:class_id/tahun/:tahun_ajaran",
   JoiValidationMiddleware({ classBodyType: UpdateGradeDto }),
   gradeController.updateGradeByUserIdNTahun()
+);
+gradeRouter.get(
+  "/:user_id/subject/:subject/class/:class_id/tahun/:tahun_ajaran",
+  gradeController.findGradeByUserIdnTahunNSubPopulate()
 );
 gradeRouter.get("/subject", gradeController.getSubjectList());
 export default gradeRouter;

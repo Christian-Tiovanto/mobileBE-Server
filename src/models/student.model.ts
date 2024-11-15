@@ -4,6 +4,7 @@ import { UserRole } from "../enums/user-role";
 
 export interface IStudent {
   name: string;
+  email: string;
   user_id: string;
   password: string;
   phone_number: string;
@@ -13,7 +14,7 @@ export interface IStudent {
   photo_url: string;
 }
 
-interface IStudentMethods {
+export interface IStudentMethods {
   correctPassword(candidatePassword: string, userPassword: string): boolean;
 }
 export type StudentModel = Model<IStudent, {}, IStudentMethods>;
@@ -21,6 +22,11 @@ export type StudentDocument = HydratedDocument<IStudent>;
 const studentSchema = new Schema<IStudent, StudentModel, IStudentMethods>(
   {
     name: String,
+    email: {
+      type: String,
+      required: [true, "please provide a email"],
+      unique: true,
+    },
     user_id: {
       type: String,
       required: [true, "please provide a user id"],

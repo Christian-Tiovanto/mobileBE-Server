@@ -17,6 +17,22 @@ export class GradeController {
     );
   }
 
+  findGradeByUserIdnTahunNSubPopulate() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const grade = await gradeService.findGradeByUserIdnTahunNSubPopulate(
+          req.params.user_id,
+          req.params.tahun_ajaran,
+          req.params.subject,
+          req.params.class_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: grade,
+        });
+      }
+    );
+  }
   updateGradeByUserIdNTahun() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +40,8 @@ export class GradeController {
           req.body,
           req.params.user_id,
           req.params.subject,
-          req.params.tahun_ajaran
+          req.params.tahun_ajaran,
+          req.params.class_id
         );
         return res.status(200).json({
           status: "success",

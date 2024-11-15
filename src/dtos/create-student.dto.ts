@@ -6,6 +6,8 @@ export class CreateStudentDto implements Omit<IStudent, "role" | "photo_url"> {
   @JoiSchema(Joi.string().required())
   name: string;
   @JoiSchema(Joi.string().required())
+  email: string;
+  @JoiSchema(Joi.string().required())
   password: string;
   @JoiSchema(Joi.string().required())
   phone_number: string;
