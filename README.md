@@ -24,8 +24,7 @@ Make sure you have the following installed on your machine:
    Clone the project from GitHub and navigate to the project directory:
 
    ```bash
-   git clone https://github.com/your-username/your-repository.git
-   cd your-repository
+   git clone https://github.com/Christian-Tiovanto/mobileBE-Server.git
 
 ## Running the Server
 1. Start the server with the following command:
