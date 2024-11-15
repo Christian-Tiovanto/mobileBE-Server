@@ -25,6 +25,9 @@ Make sure you have the following installed on your machine:
 
    ```bash
    git clone https://github.com/Christian-Tiovanto/mobileBE-Server.git
+   ```
+   ## Important
+   clone the **cdn-db-service-account.json** to the root project, if you dont have the service-account, the app will not work 
 
 ## Running the Server
 1. Start the server with the following command:
