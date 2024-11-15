@@ -19,7 +19,6 @@ export class AuthController {
 
     // Remove password from output
     user.password = undefined;
-    console.log("bapak dia");
     res.status(statusCode).json({
       status: "success",
       token,

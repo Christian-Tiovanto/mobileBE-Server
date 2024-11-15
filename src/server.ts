@@ -7,9 +7,7 @@ const process = require("process");
 configDotenv({ path: join(__dirname, "..", ".env") });
 const PORT = process.env.PORT;
 mongoose
-  .connect(
-    `mongodb://localhost:27017/mobileBE`
-  )
+  .connect(`mongodb://mongo:rahasia@localhost:27020/?directConnection=true`)
   .then(async () => {
     console.log("DB Connection Successful");
 

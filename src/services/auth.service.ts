@@ -17,7 +17,7 @@ import { CreateTeacherDto } from "../dtos/create-teacher.dto";
 import { TeacherService } from "./teacher.service";
 import { FirebaseService } from "./firebase.service";
 import { LoginType } from "../enums/login-type";
-const userService = new StudentService();
+const studentService = new StudentService();
 const teacherService = new TeacherService();
 const classService = new ClassroomService();
 const firebaseService = new FirebaseService();
@@ -32,9 +32,11 @@ export class AuthService {
     const { type, password } = loginDto;
     let user: StudentDocument & IStudentMethods;
     if (type === LoginType.EMAIL) {
-      user = await userService.findStudentByEmail(loginDto.email);
+      user = await studentService.findStudentByEmail(loginDto.email);
     } else {
-      user = await userService.findStudentByPhoneNumber(loginDto.phone_number);
+      user = await studentService.findStudentByPhoneNumber(
+        loginDto.phone_number
+      );
     }
     await user.correctPassword(password, user.password);
     await firebaseService.getUser(loginDto.email);
@@ -42,13 +44,20 @@ export class AuthService {
     return { user, token };
   }
   async signUpStudent(createUserDto: CreateStudentDto) {
-    const { email, class_id } = createUserDto;
+    const { email, class_id, password } = createUserDto;
     if (class_id) await classService.findClassroomById(class_id);
     const user = await Student.findOne({ email }).select("+password");
-    if (user)
-      throw new AppError("user_id already exist, use another user_id", 400);
+    const teacher = await Teacher.findOne({ email }).select("+password");
+    if (password.length < 6)
+      throw new AppError(
+        "password length have to be more than 5 character",
+        400
+      );
+
+    if (user || teacher)
+      throw new AppError("email already exist, use another email", 400);
     await firebaseService.signUpStudent(createUserDto);
-    const newUser = await userService.createStudent(createUserDto);
+    const newUser = await studentService.createStudent(createUserDto);
     const token = await this.signToken(newUser.user_id);
     return { newUser, token };
   }
@@ -62,10 +71,16 @@ export class AuthService {
     return { user: teacher, token };
   }
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
-    const { user_id } = createTeacherDto;
-    const user = await Teacher.findOne({ user_id }).select("+password");
-    if (user)
-      throw new AppError("user_id already exist, use another user_id", 400);
+    const { user_id, email, password } = createTeacherDto;
+    const teacher = await Teacher.findOne({ email }).select("+password");
+    const student = await studentService.findStudentByEmail(email);
+    if (password.length < 6)
+      throw new AppError(
+        "password length have to be more than 5 character",
+        400
+      );
+    if (teacher || student)
+      throw new AppError("email already exist, use another email", 400);
     await firebaseService.signUpTeacher(createTeacherDto);
     const newUser = await teacherService.createTeacher(createTeacherDto);
     const token = await this.signToken(newUser.user_id);
