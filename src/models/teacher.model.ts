@@ -46,11 +46,11 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       select: false,
       unique: true,
     },
-    class_id: {
+    class_id: [{
       type: [String],
       ref: "classroom",
       default: [],
-    },
+    }],
     homeroom_class: {
       type: String,
       ref: "classroom",
@@ -60,11 +60,11 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       type: Date,
       required: [true, "please provide enrollment date"],
     },
-    subject_teach: {
+    subject_teach: [{
       type: [String],
       default: [],
       enum: GradeSubject,
-    },
+    }],
     role: {
       type: String,
       enum: UserRole,

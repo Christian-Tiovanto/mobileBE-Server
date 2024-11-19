@@ -73,7 +73,7 @@ export class AuthService {
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
     const { user_id, email, password } = createTeacherDto;
     const teacher = await Teacher.findOne({ email }).select("+password");
-    const student = await studentService.findStudentByEmail(email);
+    const student = await Student.findOne({ email }).select("+password");
     if (password.length < 6)
       throw new AppError(
         "password length have to be more than 5 character",
