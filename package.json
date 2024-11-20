@@ -1,8 +1,10 @@
 {
   "name": "startupdigital",
-  "version": "1.0.0",
+  "version": "0.0.1-beta.1",
   "main": "index.js",
   "scripts": {
+    "start:prod":"NODE_ENV=production node dist/server.js",
+    "start:dev":"NODE_ENV=development node dist/server.js",
     "start": "ts-node -r tsconfig-paths/register src/server.ts",
     "test": "node -r tsconfig-paths/register dist/server.js"
   },

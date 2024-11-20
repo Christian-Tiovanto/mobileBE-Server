@@ -1,0 +1,89 @@
+name: Build And Push Backend Docker Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # runs only if this workflow is dispatched on 'tag', not 'branch'
+      - name: Validate running ref type
+        run: |
+          REF_TYPE=${{ github.ref_type }}
+          if [[ "$REF_TYPE" != "tag" ]]; then
+            echo "Workflow is not run on tag."
+            exit 1
+          fi
+          echo "Workflow is running of tag"
+
+      # Extract the tag name and validate it with regex
+      - name: Validate tag with regex
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)(\.[0-9]+)?)?$ ]]; then
+            echo "Tag format is invalid. Exiting."
+            exit 1
+          fi
+
+      - name: Validate Git tag matches package.json version
+        id: validate_version
+        run: |
+          PACKAGE_VERSION=$(jq -r '.version' < package.json)
+          TAG_VERSION=${GITHUB_REF_NAME#v} 
+          if [[ "$PACKAGE_VERSION" != "$TAG_VERSION" ]]; then
+            echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)."
+            exit 1
+          fi
+          echo "Tag version matches package.json version."
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        id: build-image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: simple-todo-list
+          IMAGE_TAG: ${{ github.ref_name }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: simple-todo-list-revision.json
+          task-definition-arn: arn:aws:ecs:ap-southeast-2:314146321641:task-definition/simple-todo-list:2
+          container-name: simple-todo-list
+          image: ${{ steps.build-image.outputs.image }}
+          environment-variables: |
+            DB_NAME=postgres
+            DB_PASSWORD=database_cdn_fin
+            DB_TYPE=postgres
+            DB_PORT=6543
+            DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+            DB_URL="postgresql://postgres.tjceejbkkumgwxqihyrk:database_cdn_fin@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
+            JWT_SECRET=ultrasecret
+      - name: check nama output
+        run: echo ${{steps.build-image.outputs.image}}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: simple-todo-list
+          cluster: simple-todo-list
+          wait-for-service-stability: true
