@@ -2,8 +2,11 @@ import { configDotenv } from "dotenv";
 import { join } from "path";
 import mongoose from "mongoose";
 import app from "./app";
-if ((process.env.NODE_ENV = "development")) {
+console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV == "development") {
   configDotenv({ path: join(__dirname, "..", ".env") });
+  console.log("maosk sini?");
   const PORT = process.env.PORT as any;
   mongoose
     .connect(`mongodb://localhost:27017/mobileBE?directConnection=true`)
@@ -17,7 +20,8 @@ if ((process.env.NODE_ENV = "development")) {
     .catch((error) => {
       console.log(error);
     });
-} else if ((process.env.NODE_ENV = "production")) {
+} else if (process.env.NODE_ENV == "production") {
+  console.log("proddd");
   configDotenv({ path: join(__dirname, "..", ".env.prod") });
   const PORT = process.env.PORT as any;
   mongoose
