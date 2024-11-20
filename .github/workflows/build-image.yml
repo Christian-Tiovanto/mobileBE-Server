@@ -65,18 +65,14 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: simple-todo-list-revision.json
-          task-definition-arn: arn:aws:ecs:ap-southeast-2:314146321641:task-definition/simple-todo-list:2
-          container-name: simple-todo-list
+          task-definition: mobile-be-revision1.json
+          task-definition-arn: arn:aws:ecs:ap-southeast-2:314146321641:task-definition/mobile-be:1
+          container-name: mobile-be
           image: ${{ steps.build-image.outputs.image }}
           environment-variables: |
-            DB_NAME=postgres
-            DB_PASSWORD=database_cdn_fin
-            DB_TYPE=postgres
-            DB_PORT=6543
-            DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
-            DB_URL="postgresql://postgres.tjceejbkkumgwxqihyrk:database_cdn_fin@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
+            DB_URL=mongodb+srv://mobilebe:mobilebe@cluster0.q2b3u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
             JWT_SECRET=ultrasecret
+            PORT=3006
       - name: check nama output
         run: echo ${{steps.build-image.outputs.image}}
 
@@ -84,6 +80,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: simple-todo-list
-          cluster: simple-todo-list
+          service: mobile-be
+          cluster: mobileBE
           wait-for-service-stability: true
