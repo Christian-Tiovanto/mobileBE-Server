@@ -45,7 +45,9 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
 
       - name: cat Firebase service account JSON secret
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}"
+        run: echo "${FIREBASE_SERVICE_ACCOUNT_JSON}"
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
 
       - name: cat Firebase service account JSON file
         run: cat ./cdn-db-service-account.json
