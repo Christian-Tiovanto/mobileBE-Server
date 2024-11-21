@@ -4,7 +4,6 @@ COPY ./package.json ./
 RUN npm install && npm cache clean -f
 COPY . .
 RUN npm run build
-CMD [ "/bin/bash" ]
 
 FROM node:18-alpine AS production-stage
 WORKDIR /app
