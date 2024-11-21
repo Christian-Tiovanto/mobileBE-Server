@@ -76,25 +76,25 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: mobile-be-revision1.json
-      #     task-definition-arn: arn:aws:ecs:ap-southeast-2:314146321641:task-definition/mobile-be:1
-      #     container-name: mobile-be
-      #     image: ${{ steps.build-image.outputs.image }}
-      #     environment-variables: |
-      #       DB_URL=mongodb+srv://mobilebe:mobilebe@cluster0.q2b3u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      #       JWT_SECRET=ultrasecret
-      #       PORT=3006
-      # - name: check nama output
-      #   run: echo ${{steps.build-image.outputs.image}}
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: mobile-be-revision1.json
+          task-definition-arn: arn:aws:ecs:ap-southeast-2:314146321641:task-definition/mobile-be:1
+          container-name: mobile-be
+          image: ${{ steps.build-image.outputs.image }}
+          environment-variables: |
+            DB_URL=mongodb+srv://mobilebe:mobilebe@cluster0.q2b3u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+            JWT_SECRET=ultrasecret
+            PORT=3006
+      - name: check nama output
+        run: echo ${{steps.build-image.outputs.image}}
 
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: mobile-be
-      #     cluster: mobileBE
-      #     wait-for-service-stability: true
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: mobile-be
+          cluster: mobileBE
+          wait-for-service-stability: true
