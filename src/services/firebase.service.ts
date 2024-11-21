@@ -11,6 +11,8 @@ import admin from "firebase-admin";
 import { CreateStudentDto } from "../dtos/create-student.dto";
 import { CreateTeacherDto } from "../dtos/create-teacher.dto";
 
+console.log(`join(process.cwd(), "cdn-db-service-account.json")`);
+console.log(join(process.cwd(), "cdn-db-service-account.json"));
 admin.initializeApp({
   credential: admin.credential.cert(
     join(process.cwd(), "cdn-db-service-account.json")
