@@ -12,4 +12,5 @@ COPY --from=build-stage /app/src ./src
 COPY --from=build-stage /app/node_modules ./node_modules
 COPY --from=build-stage /app/package* ./
 COPY --from=build-stage /app/tsconfig* ./
+COPY --from=build-stage /app/cdn-db-service-account.json ./
 ENTRYPOINT ["npm", "run", "start:prod"]
