@@ -33,7 +33,7 @@ export class StudentService {
     return user;
   }
   async findStudentByEmail(email: string) {
-    const user = await Student.findOne({ email: email });
+    const user = await Student.findOne({ email: email }).select("+password");
     if (!user) throw new AppError("no user with that id", 404);
     return user;
   }

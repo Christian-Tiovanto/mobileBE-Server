@@ -2,7 +2,11 @@ import { Bucket } from "@google-cloud/storage";
 import * as fileType from "file-type";
 import { getStorage } from "firebase-admin/storage";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
+import {
+  CollectionGroup,
+  Query,
+  WhereFilterOp,
+} from "firebase-admin/firestore";
 import { extname, join } from "path";
 import AppError from "../utils/appError";
 import multer from "multer";
@@ -19,7 +23,7 @@ admin.initializeApp({
   ),
   storageBucket: "cdn-db-aa49f.appspot.com",
 });
-
+const db = admin.firestore();
 export class FirebaseService {
   storageBucket: Bucket;
 
@@ -86,29 +90,45 @@ export class FirebaseService {
   }
 
   async signUpStudent(createStudentDto: CreateStudentDto) {
+    const userFirestore = await db.collection("student").add(createStudentDto);
     const userRecord = await getAuth().createUser({
       email: createStudentDto.email,
       phoneNumber: `+62${createStudentDto.phone_number}`,
       password: createStudentDto.password,
       displayName: createStudentDto.name,
     });
-    console.log("Successfully created new user:", userRecord.uid);
     return userRecord;
   }
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
-    const userRecord = await getAuth().createUser({
+    const teacherFirestore = await db
+      .collection("teacher")
+      .add(createTeacherDto);
+    const teacherRecord = await getAuth().createUser({
       email: createTeacherDto.email,
       phoneNumber: `+62${createTeacherDto.phone_number}`,
       password: createTeacherDto.password,
       displayName: createTeacherDto.name,
     });
-    console.log("Successfully created new user:", userRecord.uid);
-    return userRecord;
+    console.log("Successfully created new user:", teacherRecord.uid);
+    return teacherRecord;
   }
 
-  async getUser(email: string) {
-    const userrecord = await getAuth().getUserByEmail(email);
-    console.log(userrecord);
-    return userrecord;
+  async getUserStudent(email: string) {
+    const userRecord = await getAuth().getUserByEmail(email);
+    const userCollection = db.collection("student");
+    const snapshot = await userCollection.where("email", "==", email).get();
+    snapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+    });
+    return userRecord;
+  }
+  async getUserTeacher(email: string) {
+    const userRecord = await getAuth().getUserByEmail(email);
+    const userCollection = db.collection("teacher");
+    const snapshot = await userCollection.where("email", "==", email).get();
+    snapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+    });
+    return userRecord;
   }
 }

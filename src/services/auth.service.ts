@@ -39,7 +39,7 @@ export class AuthService {
       );
     }
     await user.correctPassword(password, user.password);
-    await firebaseService.getUser(loginDto.email);
+    await firebaseService.getUserStudent(loginDto.email);
     const token = await this.signToken(user._id);
     return { user, token };
   }
@@ -65,7 +65,7 @@ export class AuthService {
     const { type, password } = loginDto;
     let teacher: TeacherDocument & ITeacherMethods;
     teacher = await teacherService.findTeacherByEmail(loginDto.email);
-    await firebaseService.getUser(loginDto.email);
+    await firebaseService.getUserTeacher(loginDto.email);
     await teacher.correctPassword(password, teacher.password);
     const token = await this.signToken(teacher._id);
     return { user: teacher, token };
