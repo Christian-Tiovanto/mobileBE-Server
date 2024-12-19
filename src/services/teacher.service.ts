@@ -30,7 +30,6 @@ export class TeacherService {
     }
     const teacher = await this.findTeacherById(userId);
     Object.assign(teacher, updateTeacherDto);
-
     await teacher.save();
     return teacher;
   }
