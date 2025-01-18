@@ -30,5 +30,14 @@ export class CreateAttendanceDto implements IAttendance {
 
   @JoiSchema(Joi.string().required())
   tahun_ajaran: string;
+
+  @JoiSchema(Joi.date().iso().required())
   date: Date;
+}
+
+export class CreateAttendanceBulkDto {
+  @JoiSchema(CreateAttendanceDto, (schema) =>
+    Joi.array().items(schema.required()).required()
+  )
+  data: CreateAttendanceDto[];
 }

@@ -2,11 +2,6 @@ import { Bucket } from "@google-cloud/storage";
 import * as fileType from "file-type";
 import { getStorage } from "firebase-admin/storage";
 import { getAuth } from "firebase-admin/auth";
-import {
-  CollectionGroup,
-  Query,
-  WhereFilterOp,
-} from "firebase-admin/firestore";
 import { extname, join } from "path";
 import AppError from "../utils/appError";
 import multer from "multer";
@@ -49,8 +44,11 @@ export class FirebaseService {
       throw new AppError("you can only attach image/ file", 400);
     await this.storageBucket.file(fileName, {}).save(file.buffer);
   }
+  async uploadFile(file: Express.Multer.File, fileName: string) {
+    await this.storageBucket.file(fileName, {}).save(file.buffer);
+  }
 
-  async getPhoto(fileName: string) {
+  async getFile(fileName: string) {
     const [photo] = await this.storageBucket.getFiles({
       prefix: fileName,
     });

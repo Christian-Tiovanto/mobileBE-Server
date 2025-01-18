@@ -20,5 +20,9 @@ gradeRouter.get(
   "/:user_id/subject/:subject/class/:class_id/tahun/:tahun_ajaran",
   gradeController.findGradeByUserIdnTahunNSubPopulate()
 );
+gradeRouter.get(
+  "/:user_id/class/:class_id/tahun/:tahun_ajaran",
+  gradeController.getStudentNItsGrade()
+);
 gradeRouter.get("/subject", gradeController.getSubjectList());
 export default gradeRouter;

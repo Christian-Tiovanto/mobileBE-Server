@@ -2,6 +2,7 @@ import { JoiSchema } from "joi-class-decorators";
 import { IStudent } from "../models/student.model";
 import Joi from "joi";
 import { LoginType } from "../enums/login-type";
+import { LoginRole } from "../enums/role-login";
 
 export class LoginDto
   implements Pick<IStudent, "email" | "password" | "phone_number">
@@ -25,4 +26,11 @@ export class LoginDto
   phone_number: string;
   @JoiSchema(Joi.string().required())
   password: string;
+
+  @JoiSchema(
+    Joi.string()
+      .valid(...Object.values(LoginRole))
+      .required()
+  )
+  for_type: string;
 }

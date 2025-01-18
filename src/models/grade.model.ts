@@ -52,6 +52,9 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
   },
   { versionKey: false }
 );
-
+gradeSchema.index(
+  { subject: 1, user_id: 1, tahun_ajaran: 1, teacher_id: 1 },
+  { unique: true }
+);
 const Grade = model<IGrade, GradeModel>("grade", gradeSchema);
 export default Grade;

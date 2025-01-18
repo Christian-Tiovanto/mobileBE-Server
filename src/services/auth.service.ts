@@ -23,13 +23,13 @@ const classService = new ClassroomService();
 const firebaseService = new FirebaseService();
 export class AuthService {
   constructor() {}
-  private signToken(id) {
+  private signToken(id, forType) {
     console.log(process.env.JWT_SECRET);
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id, for_type: forType }, process.env.JWT_SECRET);
   }
 
   async loginStudent(loginDto: LoginDto) {
-    const { type, password } = loginDto;
+    const { type, password, for_type } = loginDto;
     let user: StudentDocument & IStudentMethods;
     if (type === LoginType.EMAIL) {
       user = await studentService.findStudentByEmail(loginDto.email);
@@ -40,7 +40,7 @@ export class AuthService {
     }
     await user.correctPassword(password, user.password);
     await firebaseService.getUserStudent(loginDto.email);
-    const token = await this.signToken(user._id);
+    const token = await this.signToken(user._id, for_type);
     return { user, token };
   }
   async signUpStudent(createUserDto: CreateStudentDto) {
@@ -59,16 +59,21 @@ export class AuthService {
       throw new AppError("email already exist, use another email", 400);
     await firebaseService.signUpStudent(createUserDto);
     const newUser = await studentService.createStudent(createUserDto);
-    const token = await this.signToken(newUser.user_id);
+    const token = await this.signToken(newUser.user_id, "");
     return { newUser, token };
   }
   async loginTeacher(loginDto: LoginDto) {
-    const { type, password } = loginDto;
+    const { type, password, for_type } = loginDto;
     let teacher: TeacherDocument & ITeacherMethods;
+    console.log("loginDto");
+    console.log(loginDto);
     teacher = await teacherService.findTeacherByEmail(loginDto.email);
     await firebaseService.getUserTeacher(loginDto.email);
-    await teacher.correctPassword(password, teacher.password);
-    const token = await this.signToken(teacher._id);
+    if (!(await teacher.correctPassword(password, teacher.password))) {
+      throw new AppError("Invalid Email or Password", 401);
+    }
+    console.log("masok ini benar kah?");
+    const token = await this.signToken(teacher._id, for_type);
     return { user: teacher, token };
   }
   async signUpTeacher(createTeacherDto: CreateTeacherDto) {
@@ -87,7 +92,7 @@ export class AuthService {
       throw new AppError("email already exist, use another email", 400);
     await firebaseService.signUpTeacher(createTeacherDto);
     const newUser = await teacherService.createTeacher(createTeacherDto);
-    const token = await this.signToken(newUser.user_id);
+    const token = await this.signToken(newUser.user_id, "");
     return { newUser, token };
   }
 }

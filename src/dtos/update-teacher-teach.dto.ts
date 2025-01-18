@@ -12,11 +12,11 @@ export class UpdateTeacherDto
     >
 {
   @JoiSchema(
-    Joi.array()
-      .items(Joi.string().valid(...Object.values(GradeSubject)))
+    Joi.string()
+      .valid(...Object.values(GradeSubject))
       .required()
   )
-  subject_teach: GradeSubject[];
+  subject_teach: GradeSubject;
 
   @JoiSchema(
     Joi.string()

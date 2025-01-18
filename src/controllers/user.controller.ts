@@ -67,6 +67,19 @@ export class StudentController {
       }
     );
   }
+  getStudentById() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const student = await studentService.findStudentById(
+          req.params.user_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: student,
+        });
+      }
+    );
+  }
 
   tesSignUpFirebase() {
     return catchAsync(

@@ -12,7 +12,7 @@ export interface ITeacher {
   class_id: string[];
   enrollment_date: Date;
   role: UserRole;
-  subject_teach: GradeSubject[];
+  subject_teach: GradeSubject;
   homeroom_class: string;
   photo_url: string;
 }
@@ -62,13 +62,11 @@ const teacherSchema = new Schema<ITeacher, TeacherModel, ITeacherMethods>(
       type: Date,
       required: [true, "please provide enrollment date"],
     },
-    subject_teach: [
-      {
-        type: String,
-        default: [],
-        enum: GradeSubject,
-      },
-    ],
+    subject_teach: {
+      type: String,
+      enum: GradeSubject,
+      default: null,
+    },
     role: {
       type: String,
       enum: UserRole,
@@ -92,6 +90,8 @@ teacherSchema.method(
     candidatePassword: string,
     userPassword: string
   ) {
+    console.log("atau dia gak cek?");
+    console.log(await bcrypt.compare(candidatePassword, userPassword));
     return await bcrypt.compare(candidatePassword, userPassword);
   }
 );

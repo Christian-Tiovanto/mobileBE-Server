@@ -37,6 +37,7 @@ teacherRouter.get(
   "/:teacher_id/class-teach",
   teacherController.getClassTeacherTeach()
 );
+teacherRouter.get("/:teacher_id", teacherController.findTeacherById());
 teacherRouter.delete(
   "/delete/semua/firebase",
   authController.deleteAllUserFirebase()

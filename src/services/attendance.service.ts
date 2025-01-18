@@ -1,31 +1,36 @@
-import { CreateAttendanceDto } from "../dtos/create-attendance.dto";
+import mongoose from "mongoose";
+import { CreateAttendanceBulkDto } from "../dtos/create-attendance.dto";
 import Attendance from "../models/attendance.model";
 import AppError from "../utils/appError";
 import { ClassroomService } from "./classroom.service";
 import { StudentService } from "./student.service";
+import { AttendanceStatus } from "../enums/attendance-status";
 
 const studentService = new StudentService();
 const classroomService = new ClassroomService();
 export class AttendanceService {
   constructor() {}
 
-  async createAttendance(createAttendanceDto: CreateAttendanceDto) {
-    const { user_id, class_id } = createAttendanceDto;
-    const date = new Date();
+  async createAttendanceBulk(createAttendanceBulkDto: CreateAttendanceBulkDto) {
+    const date = new Date(createAttendanceBulkDto.data[0].date);
     date.setHours(17, 0, 0, 0);
-    createAttendanceDto.date = date;
 
-    await this.findAttendanceByUserIdNClassIdNDate(
-      user_id.toString(),
-      class_id.toString(),
-      date
+    // createAttendanceBulkDto.date = date;
+    for (const attendanceDto of createAttendanceBulkDto.data) {
+      await this.findAttendanceByUserIdNClassIdNDate(
+        attendanceDto.user_id.toString(),
+        attendanceDto.class_id.toString(),
+        date
+      );
+      await studentService.findStudentById(attendanceDto.user_id.toString());
+      await classroomService.findClassroomById(
+        attendanceDto.class_id.toString()
+      );
+      attendanceDto.date = date;
+    }
+    const attendance = await Attendance.insertMany(
+      createAttendanceBulkDto.data
     );
-    await studentService.findStudentByEmail(user_id.toString());
-    await classroomService.findClassroomById(
-      createAttendanceDto.class_id.toString()
-    );
-
-    const attendance = await Attendance.create(createAttendanceDto);
     return attendance;
   }
 
@@ -40,11 +45,7 @@ export class AttendanceService {
       date,
     });
 
-    if (attendance)
-      throw new AppError(
-        "attendance already given, if you want to change the status, update the attendance",
-        404
-      );
+    if (attendance) throw new AppError("attendance already given", 404);
     return Attendance;
   }
 
@@ -92,5 +93,20 @@ export class AttendanceService {
       tahun_ajaran: tahunAjaran,
     });
     return attendances;
+  }
+
+  async getStudentAttendanceCount(
+    userId: string,
+    classId: string,
+    tahunAjaran: string,
+    status: AttendanceStatus
+  ) {
+    const attendanceCount = await Attendance.countDocuments({
+      user_id: new mongoose.Types.ObjectId(userId),
+      class_id: classId,
+      tahun_ajaran: tahunAjaran,
+      status,
+    });
+    return attendanceCount;
   }
 }

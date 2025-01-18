@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { CreateGradeDto } from "../dtos/create-grade.dto";
 import { UpdateGradeDto } from "../dtos/update-grade.dto";
 import { GradeSubject } from "../enums/grade-list";
@@ -88,6 +89,19 @@ export class GradeService {
     }).exec();
     if (!grade) throw new AppError("no grade found", 404);
     return grade;
+  }
+
+  async getStudentNItsGrade(
+    userId: string,
+    classId: string,
+    tahunAjaran: string
+  ) {
+    const grades = await Grade.find({
+      user_id: userId,
+      class_id: classId,
+      tahun_ajaran: tahunAjaran,
+    }).populate("user_id");
+    return grades;
   }
   async findGradeByUserIdnTahunNSubPopulate(
     userId: string,

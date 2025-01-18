@@ -77,7 +77,7 @@ export class TeacherService {
 
   async getTeacherPhotoById(id: string) {
     const teacher = await this.findTeacherById(id);
-    const photo = await firebaseService.getPhoto(teacher.photo_url);
+    const photo = await firebaseService.getFile(teacher.photo_url);
     return { photo, teacher };
   }
 

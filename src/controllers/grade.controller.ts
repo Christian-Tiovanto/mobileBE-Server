@@ -63,4 +63,19 @@ export class GradeController {
       }
     );
   }
+  getStudentNItsGrade() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const grades = await gradeService.getStudentNItsGrade(
+          req.params.user_id,
+          req.params.class_id,
+          req.params.tahun_ajaran
+        );
+        return res.status(200).json({
+          status: "success",
+          data: grades,
+        });
+      }
+    );
+  }
 }

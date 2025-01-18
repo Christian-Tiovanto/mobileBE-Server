@@ -38,6 +38,7 @@ studentRouter.get(
   studentController.getStudentsByClassId()
 );
 studentRouter.get("/all/student", studentController.getAllStudent());
+studentRouter.get("/:user_id", studentController.getStudentById());
 studentRouter.post("/coba/coba/coba", studentController.tesSignUpFirebase());
 // studentRouter.get("/coba/coba/coba", studentController.tesGetFirebase());
 export default studentRouter;

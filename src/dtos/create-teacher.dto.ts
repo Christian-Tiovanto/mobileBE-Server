@@ -25,5 +25,5 @@ export class CreateTeacherDto
       .valid(...Object.values(GradeSubject))
       .optional()
   )
-  subject_teach: GradeSubject[];
+  subject_teach: GradeSubject;
 }

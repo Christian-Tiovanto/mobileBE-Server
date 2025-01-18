@@ -28,7 +28,7 @@ export class StudentService {
     return user;
   }
   async findStudentById(id: string) {
-    const user = await Student.findOne({ _id: id });
+    const user = await Student.findOne({ _id: id }).select("+phone_number");
     if (!user) throw new AppError("no user with that id", 404);
     return user;
   }
@@ -46,6 +46,10 @@ export class StudentService {
   async getStudentsByClassId(classId: string) {
     const users = await Student.find({ class_id: classId });
     return users;
+  }
+  async getStudentById(userId: string) {
+    const user = await Student.findById(userId);
+    return user;
   }
 
   async updateStudentById(id: string, updateStudentDto: UpdateStudentDto) {
@@ -75,7 +79,7 @@ export class StudentService {
 
   async getStudentPhotoById(id: string) {
     const student = await this.findStudentById(id);
-    const photo = await firebaseService.getPhoto(student.photo_url);
+    const photo = await firebaseService.getFile(student.photo_url);
     return { photo, student };
   }
 }

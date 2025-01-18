@@ -7,6 +7,19 @@ const teacherService = new TeacherService();
 export class TeacherController {
   constructor() {}
 
+  findTeacherById() {
+    return catchAsync(
+      async (req: Request, res: Response, next: NextFunction) => {
+        const teacher = await teacherService.findTeacherById(
+          req.params.teacher_id
+        );
+        res.status(200).json({
+          status: "success",
+          data: teacher,
+        });
+      }
+    );
+  }
   updateTeacherTeach() {
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
