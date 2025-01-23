@@ -11,6 +11,8 @@ export function JoiValidationMiddleware({
   classQueryType?: any;
 }) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log("req.body");
+    console.log(req.body);
     try {
       if (Object.keys(req.body).length !== 0) {
         const schema = getClassSchema(classBodyType);

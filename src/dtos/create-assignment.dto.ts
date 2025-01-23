@@ -1,6 +1,7 @@
 import { JoiSchema, JoiSchemaOptions } from "joi-class-decorators";
 import Joi from "joi";
 import { IAssignment } from "../models/assignment.model";
+import { Types } from "mongoose";
 
 @JoiSchemaOptions({ allowUnknown: false })
 export class CreateAssignmentDto implements IAssignment {
@@ -18,6 +19,9 @@ export class CreateAssignmentDto implements IAssignment {
 
   @JoiSchema(Joi.string().required())
   tahun_ajaran: string;
+
+  subject: string;
+  teacher_id: Types.ObjectId;
 
   // @JoiSchema(Joi.array().items(Joi.string()).optional())
   file_url: string;

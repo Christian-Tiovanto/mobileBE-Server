@@ -9,6 +9,7 @@ import cors from "cors";
 import assignmentRouter from "./routes/assignment.router";
 import submissionRouter from "./routes/submission.router";
 import announcementRouter from "./routes/announcement.router";
+import subjectRouter from "./routes/subject.routes";
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -20,6 +21,7 @@ app.use("/api/v1/grade", gradeRouter);
 app.use("/api/v1/assignment", assignmentRouter);
 app.use("/api/v1/submission", submissionRouter);
 app.use("/api/v1/announcement", announcementRouter);
+app.use("/api/v1/subject", subjectRouter);
 
 app.use(globalErrorHandler);
 export default app;

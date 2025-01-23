@@ -20,10 +20,6 @@ export class CreateTeacherDto
   user_id: string;
   @JoiSchema(Joi.date().required())
   enrollment_date: Date;
-  @JoiSchema(
-    Joi.string()
-      .valid(...Object.values(GradeSubject))
-      .optional()
-  )
-  subject_teach: GradeSubject;
+  @JoiSchema(Joi.string().optional())
+  subject_teach: string;
 }

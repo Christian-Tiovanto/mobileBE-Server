@@ -9,15 +9,18 @@ import { extname } from "path";
 import { StudentService } from "./student.service";
 import { SubmissionService } from "./submission.service";
 import { CreateStudentAssignmentDto } from "../dtos/create-student-assignment.dto";
+import { TeacherService } from "./teacher.service";
 
 const classroomService = new ClassroomService();
 const firebaseService = new FirebaseService();
 const studentService = new StudentService();
+const teacherService = new TeacherService();
 const submissionService = new SubmissionService();
 export class AssignmentService {
   constructor() {}
 
   async createAssignment(
+    teacherId: string,
     createAssignmentDto: CreateAssignmentDto,
     file: Express.Multer.File
   ) {
@@ -25,6 +28,7 @@ export class AssignmentService {
     const students = await studentService.getStudentsByClassId(
       createAssignmentDto.class_id
     );
+    const teacher = await teacherService.findTeacherById(teacherId);
     const assignment = new Assignment(createAssignmentDto);
     if (file) {
       const fileName = `${createAssignmentDto.class_id}-${
@@ -34,6 +38,8 @@ export class AssignmentService {
       const key = `assignment/${fileName}`;
       await firebaseService.uploadFile(file, key);
     }
+    assignment.subject = teacher.subject_teach;
+    assignment.teacher_id = teacher._id;
     await assignment.save();
     const createStudentAssignmentDto: CreateStudentAssignmentDto[] = [];
     for (const student of students) {

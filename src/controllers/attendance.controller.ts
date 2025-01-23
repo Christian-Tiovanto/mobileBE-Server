@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AttendanceService } from "../services/attendance.service";
 import catchAsync from "../utils/catch-async";
 import { AttendanceStatus } from "../enums/attendance-status";
+import { ReqWithUser } from "./grade.controller";
 
 const attendanceService = new AttendanceService();
 export class AttendanceController {
@@ -53,6 +54,21 @@ export class AttendanceController {
       }
     );
   }
+  getStudentAttendanceCountLoggedIn() {
+    return catchAsync(
+      async (req: ReqWithUser, res: Response, next: NextFunction) => {
+        const attendances =
+          await attendanceService.getStudentAttendanceCountById(
+            req.user.id,
+            req.params.status as AttendanceStatus
+          );
+        return res.status(200).json({
+          status: "success",
+          data: attendances,
+        });
+      }
+    );
+  }
 
   getAttendanceByClassIdNTahun() {
     return catchAsync(
@@ -62,6 +78,19 @@ export class AttendanceController {
             req.params.class_id,
             req.params.tahun_ajaran
           );
+        return res.status(200).json({
+          status: "success",
+          data: attendances,
+        });
+      }
+    );
+  }
+  getAttendanceByStudentId() {
+    return catchAsync(
+      async (req: ReqWithUser, res: Response, next: NextFunction) => {
+        const attendances = await attendanceService.getAttendanceByStudentId(
+          req.user.id
+        );
         return res.status(200).json({
           status: "success",
           data: attendances,

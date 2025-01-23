@@ -109,4 +109,22 @@ export class AttendanceService {
     });
     return attendanceCount;
   }
+  async getStudentAttendanceCountById(
+    userId: string,
+    status: AttendanceStatus
+  ) {
+    const student = await studentService.findStudentById(userId);
+    const attendanceCount = await Attendance.countDocuments({
+      user_id: new mongoose.Types.ObjectId(userId),
+      class_id: student.class_id,
+      tahun_ajaran: "2023",
+      status,
+    });
+    return attendanceCount;
+  }
+
+  async getAttendanceByStudentId(studentId: string) {
+    const attendances = await Attendance.find({ user_id: studentId });
+    return attendances;
+  }
 }

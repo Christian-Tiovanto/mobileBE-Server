@@ -23,6 +23,7 @@ export class SubmissionController {
     );
   }
   updateSubmissionScore() {
+    console.log("updateSubmissionScore");
     return catchAsync(
       async (req: Request, res: Response, next: NextFunction) => {
         const assignment = await submissionService.updateSubmissionScore(

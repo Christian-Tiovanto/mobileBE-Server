@@ -1,4 +1,4 @@
-import { HydratedDocument, Model, model, Schema } from "mongoose";
+import { HydratedDocument, Model, model, Schema, Types } from "mongoose";
 
 export interface IAssignment {
   due_date: Date;
@@ -6,6 +6,8 @@ export interface IAssignment {
   title: string;
   description: string;
   tahun_ajaran: string;
+  subject: string;
+  teacher_id: Types.ObjectId;
   file_url: string;
 }
 
@@ -25,6 +27,16 @@ const assingmentSchema = new Schema<IAssignment, AssignmentModel>(
       type: String,
       required: [true, "please provide a class id"],
       ref: "classrooms",
+    },
+    subject: {
+      type: String,
+      required: [true, "please provide a subject"],
+      ref: "classrooms",
+    },
+    teacher_id: {
+      type: Schema.Types.ObjectId,
+      required: [true, "please provide a teacher id"],
+      ref: "teacher",
     },
     description: {
       type: String,

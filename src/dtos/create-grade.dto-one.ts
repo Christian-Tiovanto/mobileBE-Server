@@ -6,8 +6,8 @@ import { GradeSubject } from "../enums/grade-list";
 import { ValidationRegex } from "../enums/regex";
 
 @JoiSchemaOptions({ allowUnknown: false })
-export class CreateGradeBulkDto
-  implements Pick<IGrade, "tahun_ajaran" | "class_id" | "teacher_id">
+export class CreateGradeDto
+  implements Pick<IGrade, "tahun_ajaran" | "class_id" | "user_id">
 {
   @JoiSchema(Joi.string().required())
   tahun_ajaran: string;
@@ -16,5 +16,5 @@ export class CreateGradeBulkDto
   class_id: string;
 
   @JoiSchema(Joi.string().regex(ValidationRegex.OBJECT_ID).required())
-  teacher_id: Types.ObjectId;
+  user_id: Types.ObjectId;
 }

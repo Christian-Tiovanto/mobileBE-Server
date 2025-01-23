@@ -23,7 +23,7 @@ export class CreateAttendanceDto implements IAttendance {
   @JoiSchema(
     Joi.when("status", {
       is: AttendanceStatus.PERMISSION,
-      then: Joi.string().required(),
+      then: Joi.string().valid("").optional(),
     }).optional()
   )
   reason: string;

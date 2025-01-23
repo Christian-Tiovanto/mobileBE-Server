@@ -3,6 +3,7 @@ import { JoiValidationMiddleware } from "../middlewares/joi-validation.middlewar
 import multer from "multer";
 import { CreateAssignmentDto } from "../dtos/create-assignment.dto";
 import { AssignmentController } from "../controllers/assignment.controller";
+import { verifyJWT } from "../guards/authentication.guard";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -12,6 +13,7 @@ const assignmentController = new AssignmentController();
 assignmentRouter.post(
   "/",
   upload.single("photo"),
+  verifyJWT(),
   JoiValidationMiddleware({ classBodyType: CreateAssignmentDto }),
   assignmentController.createAssignment()
 );

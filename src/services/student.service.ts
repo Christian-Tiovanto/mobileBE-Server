@@ -64,16 +64,12 @@ export class StudentService {
   async uploadStudentPhotoById(id: string, req: Request) {
     const student = await this.findStudentById(id);
 
-    const session = await connection.startSession();
-    await session.withTransaction(async () => {
-      const url = `photo_profile_student_${student.user_id}${extname(
-        req.file.originalname
-      )}`;
-      student.photo_url = url;
-      await firebaseService.uploadPhoto(req.file, url);
-      await student.save({ session });
-    });
-    await session.endSession();
+    const url = `photo_profile_student_${student.user_id}${extname(
+      req.file.originalname
+    )}`;
+    student.photo_url = url;
+    await firebaseService.uploadPhoto(req.file, url);
+    await student.save();
     return student;
   }
 

@@ -11,12 +11,8 @@ export class UpdateTeacherDto
       "subject_teach" | "role" | "class_id" | "homeroom_class" | "phone_number"
     >
 {
-  @JoiSchema(
-    Joi.string()
-      .valid(...Object.values(GradeSubject))
-      .required()
-  )
-  subject_teach: GradeSubject;
+  @JoiSchema(Joi.string().required())
+  subject_teach: string;
 
   @JoiSchema(
     Joi.string()
@@ -28,7 +24,7 @@ export class UpdateTeacherDto
   @JoiSchema(Joi.array().items(Joi.string()).optional())
   class_id: string[];
 
-  @JoiSchema(Joi.string().optional())
+  @JoiSchema(Joi.string().allow(null).optional())
   homeroom_class: string;
 
   @JoiSchema(Joi.string().optional())

@@ -8,7 +8,8 @@ import mongoose, {
 import { GradeSubject } from "../enums/grade-list";
 
 export interface IGrade {
-  subject: GradeSubject;
+  _id: Types.ObjectId;
+  subject: string;
   user_id: Types.ObjectId;
   teacher_id: Types.ObjectId;
   class_id: string;
@@ -24,7 +25,6 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
   {
     subject: {
       type: String,
-      enum: GradeSubject,
       required: [true, "please provide a subject"],
     },
     user_id: {
@@ -52,9 +52,6 @@ const gradeSchema = new Schema<IGrade, GradeModel>(
   },
   { versionKey: false }
 );
-gradeSchema.index(
-  { subject: 1, user_id: 1, tahun_ajaran: 1, teacher_id: 1 },
-  { unique: true }
-);
+gradeSchema.index({ user_id: 1, tahun_ajaran: 1, teacher_id: 1 });
 const Grade = model<IGrade, GradeModel>("grade", gradeSchema);
 export default Grade;

@@ -1,13 +1,15 @@
 import { extname } from "path";
 import { CreateStudentAssignmentDto } from "../dtos/create-student-assignment.dto";
-import Submission from "../models/submission.model";
+import Submission, { SubmissionModel } from "../models/submission.model";
 import AppError from "../utils/appError";
 import { StudentAssignmentStatus } from "../enums/student-assignment-status";
 import { FirebaseService } from "./firebase.service";
 import * as fileType from "file-type";
 import { UpdateSubmissionScoreDto } from "../dtos/update-submission-score.dto";
 import mongoose from "mongoose";
+import { GradeService } from "./grade.service";
 
+const gradeService = new GradeService();
 const firebaseService = new FirebaseService();
 export class SubmissionService {
   constructor() {}
@@ -24,10 +26,10 @@ export class SubmissionService {
     studentId: string,
     file: Express.Multer.File
   ) {
-    const submission = await Submission.findOne({
+    const submission: any = await Submission.findOne({
       assignment_id: assignmentId,
       student_id: studentId,
-    });
+    }).populate("assignment_id");
     if (!submission) {
       throw new AppError("no submission found", 404);
     }
@@ -59,22 +61,47 @@ export class SubmissionService {
     submissionId: string,
     updateSubmissionScoreDto: UpdateSubmissionScoreDto
   ) {
-    const submission = await this.findSubmissionById(submissionId);
+    console.log("submissionId di updateSubmissionScore");
+    console.log(submissionId);
+    const submission: any = await this.findSubmissionById(submissionId);
     submission.score = updateSubmissionScoreDto.score;
+    const allSubmission = await Submission.find({
+      student_id: submission.student_id,
+      class_id: submission.class_id,
+    });
+    const grade = await gradeService.findGradeByClassIdNUserIdN(
+      submission.student_id.toString(),
+      "2023",
+      submission.assignment_id.subject,
+      submission.class_id
+    );
+    const oldTotalAssignmentScore = allSubmission.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.score,
+      0
+    );
+    grade.assignment_score =
+      (oldTotalAssignmentScore + updateSubmissionScoreDto.score) /
+      allSubmission.length;
+    console.log(oldTotalAssignmentScore);
+    console.log(updateSubmissionScoreDto.score);
     await submission.save();
+    await grade.save();
     return submission;
   }
 
   async findSubmissionById(id: string) {
-    const studentAssignment = await Submission.findById(id);
+    const studentAssignment = await Submission.findById(id).populate(
+      "assignment_id"
+    );
     if (!studentAssignment) {
-      throw new AppError("no student assignment with that id", 404);
+      throw new AppError("no submission with that id", 404);
     }
     return studentAssignment;
   }
   async getSubmissionByAssignmentId(id: string) {
     const studentAssignment = await Submission.find({
       assignment_id: id,
+      status: StudentAssignmentStatus.CLOSED,
     }).populate({ path: "student_id", select: "name" });
 
     return studentAssignment;

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../utils/catch-async";
 import { AssignmentService } from "../services/assignment.service";
 import * as fileType from "file-type";
+import { ReqWithUser } from "./grade.controller";
 
 const assignmentService = new AssignmentService();
 export class AssignmentController {
@@ -9,8 +10,9 @@ export class AssignmentController {
 
   createAssignment() {
     return catchAsync(
-      async (req: Request, res: Response, next: NextFunction) => {
+      async (req: ReqWithUser, res: Response, next: NextFunction) => {
         const assignment = await assignmentService.createAssignment(
+          req.user.id,
           req.body,
           req.file
         );

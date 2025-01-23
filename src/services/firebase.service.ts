@@ -31,9 +31,6 @@ export class FirebaseService {
       `.${(await fileType.fromBuffer(file.buffer)).ext}` !=
         extname(file.originalname)
     );
-    console.log("`.${(await fileType.fromBuffer(file.buffer)).ext}`");
-    console.log(`.${(await fileType.fromBuffer(file.buffer)).ext}`);
-    console.log(extname(file.originalname));
     if (extname(file.originalname) == ".jpeg") {
       file.originalname = file.originalname.replace(".jpeg", ".jpg");
     }
@@ -85,6 +82,43 @@ export class FirebaseService {
     } catch (error) {
       console.error("Error deleting users:", error);
     }
+  }
+
+  async deleteQueryBatch(db, query, resolve) {
+    const snapshot = await query.get();
+
+    if (snapshot.empty) {
+      resolve();
+      return;
+    }
+
+    const batch = db.batch();
+    snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+
+    // Recursively delete the next batch
+    process.nextTick(() => {
+      this.deleteQueryBatch(db, query, resolve);
+    });
+  }
+  async deleteCollection(collectionPath, batchSize = 100) {
+    const collectionRef = db.collection(collectionPath);
+    const query = collectionRef.limit(batchSize);
+
+    return new Promise((resolve, reject) => {
+      this.deleteQueryBatch(db, query, resolve).catch(reject);
+    });
+  }
+  async deleteAllData() {
+    const collections = await db.listCollections();
+    for (const collection of collections) {
+      console.log(`Deleting collection: ${collection.id}`);
+      await this.deleteCollection(collection.id);
+    }
+    console.log("All data deleted.");
   }
 
   async signUpStudent(createStudentDto: CreateStudentDto) {

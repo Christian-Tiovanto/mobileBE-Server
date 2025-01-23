@@ -29,6 +29,7 @@ export class TeacherService {
       }
     }
     const teacher = await this.findTeacherById(userId);
+    updateTeacherDto.class_id = [...new Set(updateTeacherDto.class_id)];
     Object.assign(teacher, updateTeacherDto);
     await teacher.save();
     return teacher;
@@ -47,6 +48,10 @@ export class TeacherService {
     const user = await Teacher.findOne({ email: email }).select("+password");
     if (!user) throw new AppError("no teacher with that email", 404);
     return user;
+  }
+  async getTeacherByClassId(classId: string) {
+    const teachers = await Teacher.findOne({ class_id: classId });
+    return teachers;
   }
   async findTeacherByPhoneNumber(phoneNumber: string) {
     const user = await Teacher.findOne({ phone_number: phoneNumber }).select(
